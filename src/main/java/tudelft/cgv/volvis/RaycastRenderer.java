@@ -136,7 +136,7 @@ public class RaycastRenderer extends Renderer implements TFChangeListener {
 //                val = (int) volume.getVoxelLinearInterpolate(pixelCoord);
                 
                 //you have to implement this function below to get the cubic interpolation
-                val = (int) volume.getVoxelTriCubicInterpolate(pixelCoord);
+                val = (int) volume.getVoxelLinearInterpolate(pixelCoord);
                 
                 
                 // Map the intensity to a grey value by linear scaling
@@ -188,7 +188,7 @@ public class RaycastRenderer extends Renderer implements TFChangeListener {
        
         double maximum = 0;
         do {
-            double value = volume.getVoxelTriCubicInterpolate(currentPos)/255.; 
+            double value = volume.getVoxelLinearInterpolate(currentPos)/255.; 
             if (value > maximum) {
                 maximum = value;
             }
@@ -246,8 +246,8 @@ public int traceRayIso(double[] entryPoint, double[] exitPoint, double[] rayVect
         VectorMath.setVector(nextPosition, entryPoint[0] + increments[0], entryPoint[1]+ increments[1], entryPoint[2] + increments[2]);
         
         do {
-            float currentValue = volume.getVoxelTriCubicInterpolate(currentPosition);
-            float nextValue = volume.getVoxelTriCubicInterpolate(nextPosition);
+            float currentValue = volume.getVoxelLinearInterpolate(currentPosition);
+            float nextValue = volume.getVoxelLinearInterpolate(nextPosition);
            
             // If the isovalue is between current value and next value, perform bisection to find exact position.
             if((Math.floor(currentValue) >= iso_value && Math.floor(nextValue) <  iso_value  )
@@ -316,7 +316,7 @@ public int traceRayIso(double[] entryPoint, double[] exitPoint, double[] rayVect
                     (currentPosition[1] + nextPosition[1]) / 2,
                     (currentPosition[2] + nextPosition[2]) / 2);
             
-            double midValue = volume.getVoxelTriCubicInterpolate(midPosition);
+            double midValue = volume.getVoxelLinearInterpolate(midPosition);
             
             // TODO: Do this with an epsilon? Or not necessary because we floor?
             if(Math.floor(midValue) == iso_value){
@@ -351,7 +351,7 @@ public int traceRayIso(double[] entryPoint, double[] exitPoint, double[] rayVect
     TFColor computeCompositeColor1D(double[] currentPos, double[] increments, int nrSamples, double[] rayVector) {
         
         // Compute the color at this position on the ray.
-        int value = (int) volume.getVoxelTriCubicInterpolate(currentPos); // TODO: Should we use linear or tricube?
+        int value = (int) volume.getVoxelLinearInterpolate(currentPos); // TODO: Should we use linear or tricube?
         TFColor currentColor = tFunc.getColor(value);
         
         // Draw a new sample if we have insufficient samples and early ray termination criterion is not met.
@@ -392,7 +392,7 @@ public int traceRayIso(double[] entryPoint, double[] exitPoint, double[] rayVect
     TFColor computeCompositeColor2D(double[] currentPos, double[] lightVector, int nrSamples, double[] rayVector) {
         
         // Compute the color at this position on the ray.
-        int value = (int) volume.getVoxelTriCubicInterpolate(currentPos); // TODO: Should we use linear or tricube?
+        int value = (int) volume.getVoxelLinearInterpolate(currentPos); // TODO: Should we use linear or tricube?
         TFColor currentColor = tFunc2D.color;
         double gradientMagnitude = this.gradients.getGradient(currentPos).mag;
         double currentOpacity = this.computeOpacity2DTF(tFunc2D.baseIntensity, tFunc2D.radius, value, gradientMagnitude) * currentColor.a;
@@ -457,7 +457,6 @@ public int traceRayIso(double[] entryPoint, double[] exitPoint, double[] rayVect
             voxel_color.r = color.r;
             voxel_color.g = color.g;
             voxel_color.b = color.b;
-            voxel_color.a = color.a;
             opacity = (voxel_color.r > 0 || voxel_color.b > 0 || voxel_color.b > 0) ? 1 : 0;
         }
         
