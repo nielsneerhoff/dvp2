@@ -460,14 +460,17 @@ public int traceRayIso(double[] entryPoint, double[] exitPoint, double[] rayVect
             voxel_color.a = 1;
             opacity = 1;
         }
+         
         if (shadingMode) {
-            // Shading mode on
-            voxel_color.r = 1;
-            voxel_color.g =0;
-            voxel_color.b =1;
-            voxel_color.a =1;
-            opacity = 1;     
+                    TFColor color = new TFColor(r, g, b, alpha);
+                    color = computePhongShading(color, gradients.getGradient(currentPosition), lightVector, rayVector);
+                    voxel_color.r = color.r;
+                    voxel_color.g = color.g;
+                    voxel_color.b = color.b;
+                    voxel_color.a = color.a; 
         }
+            
+        
             
         r = voxel_color.r;
         g = voxel_color.g;
@@ -508,53 +511,40 @@ public int traceRayIso(double[] entryPoint, double[] exitPoint, double[] rayVect
         
         TFColor color;
 
-       
-
         //Normalized GradientVector
         //If there is no gradient (magnitude is equal to zero, so 0 in x,y,z direction)
         if(gradient.mag == 0)   return voxel_color;
-        double[] gradVec = {gradient.x / gradient.mag, gradient.y / gradient.mag, gradient.z / gradient.mag};
+        double[] normGradientVector = {gradient.x / gradient.mag, gradient.y / gradient.mag, gradient.z / gradient.mag};
 
-        //Normalized Vector Light
+        //Normalized Light Vector
         if(VectorMath.length(lightVector) == 0) return voxel_color;
-        double[] lightNormVector = {lightVector[0] / VectorMath.length(lightVector), lightVector[1] / VectorMath.length(lightVector), lightVector[2] / VectorMath.length(lightVector)};
+        double[] normLightVector = {lightVector[0] / VectorMath.length(lightVector), lightVector[1] / VectorMath.length(lightVector), lightVector[2] / VectorMath.length(lightVector)};
 
-        //Normalized Vector Ray
+        //Normalized Ray Vector
         if(VectorMath.length(rayVector) == 0) return voxel_color;
-        double[] rayNormVector = {rayVector[0] / VectorMath.length(rayVector), rayVector[1] / VectorMath.length(rayVector), rayVector[2] / VectorMath.length(rayVector)};
+        double[] normRayVector = {rayVector[0] / VectorMath.length(rayVector), rayVector[1] / VectorMath.length(rayVector), rayVector[2] / VectorMath.length(rayVector)};
 
-        //cosTheta
-        double cosTheta = VectorMath.dotproduct(lightNormVector, gradVec);
+        //cosTheta (gradient vector is our normal vector) 
+        double cosTheta = VectorMath.dotproduct(normLightVector, normGradientVector);
 
         //R
-        double[] twice_gradVec = {gradVec[0] * 2, gradVec[1] * 2, gradVec[2] * 2};
-        double x = VectorMath.dotproduct(twice_gradVec, lightNormVector);
-        double[] x_gradVec = {gradVec[0] * x, gradVec[1] * x, gradVec[2] * x};
-        double[] R = {x_gradVec[0] - lightNormVector[0], x_gradVec[1] - lightNormVector[1], x_gradVec[2] - lightNormVector[2]};
-        double cos2 = VectorMath.dotproduct(rayNormVector,R );
+        double temp = VectorMath.dotproduct(normGradientVector, normLightVector) * 2;
+        double[] temptimesGradientVector = {normGradientVector[0] * temp, normGradientVector[1] * temp, normGradientVector[2] * temp};
+        double[] R = {temptimesGradientVector[0] - normLightVector[0], temptimesGradientVector[1] - normLightVector[1], temptimesGradientVector[2] - normLightVector[2]};
+        double cosPhi = VectorMath.dotproduct(normRayVector,R );
         
-        double r = La[0] * ka * voxel_color.r + Ld[0] * kd * voxel_color.r * cosTheta + Ls[0] * ks * voxel_color.r * Math.pow(cos2, alpha);
-        double g = La[1] * ka * voxel_color.g + Ld[1] * kd * voxel_color.g * cosTheta + Ls[1] * ks * voxel_color.g * Math.pow(cos2, alpha);
-        double b = La[2] * ka * voxel_color.b + Ld[2] * kd * voxel_color.b * cosTheta + Ls[2] * ks * voxel_color.b * Math.pow(cos2, alpha);
+        double r = La[0] * ka * voxel_color.r + Ld[0] * kd * voxel_color.r * cosTheta + Ls[0] * ks * voxel_color.r * Math.pow(cosPhi, alpha);
+        double g = La[1] * ka * voxel_color.g + Ld[1] * kd * voxel_color.g * cosTheta + Ls[1] * ks * voxel_color.g * Math.pow(cosPhi, alpha);
+        double b = La[2] * ka * voxel_color.b + Ld[2] * kd * voxel_color.b * cosTheta + Ls[2] * ks * voxel_color.b * Math.pow(cosPhi, alpha);
       
-        if (r < 0) {
-            r = 0;
-        }
-        if (g < 0) {
-            g = 0;
-        }
-        if (b < 0) {
-            b = 0;
-        }
-        if (r > 1) {
-            r = 1;
-        }
-        if (g > 1) {
-            g = 1;
-        }
-        if (b > 1) {
-            b = 1;
-        }
+        if (r < 0) {r = 0;}
+        if (r > 1) {r = 1;}
+   
+        if (g < 0) {g = 0;}
+        if (g > 1) {g = 1;}
+        
+        if (b < 0) {b = 0;}
+        if (b > 1) {b = 1;}
        
         color = new TFColor(r, g, b, voxel_color.a);
         return color;
