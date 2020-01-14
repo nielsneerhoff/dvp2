@@ -349,42 +349,43 @@ public int traceRayIso(double[] entryPoint, double[] exitPoint, double[] rayVect
     // exitPoint is the last point.
     //ray must be sampled with a distance defined by the sampleStep
    // TODO: Comment.
-    TFColor computeCompositeColor1D(double[] currentPos, double[] lightVector, int nrSamples, double[] rayVector) {
+    TFColor computeCompositeColor1D(double[] currentPos, double[] increments, int nrSamples, double[] rayVector) {
         
         // Compute the color at this position on the ray.
         int value = (int) volume.getVoxelLinearInterpolate(currentPos); // TODO: Should we use linear or tricube?
         TFColor currentColor = tFunc.getColor(value);
         
-        // Draw a new sample if we have insufficient samples.
-        if(nrSamples >= 0) {
+        // Draw a new sample if we have insufficient samples and early ray termination criterion is not met.
+        if(nrSamples >= 0 && currentColor.a < 0.9) {
 
             if(shadingMode && currentColor.r > 0 && currentColor.g > 0 && currentColor.b > 0) {
-                currentColor = computePhongShading(currentColor, gradients.getGradient(currentPos), lightVector, rayVector);
+                currentColor = computePhongShading(currentColor, gradients.getGradient(currentPos), increments, rayVector);
             }
             
             // Reorientate the position to the next sample step along the ray.
             for (int i = 0; i < 3; i++) {
-                currentPos[i] += lightVector[i];
+                currentPos[i] += increments[i];
             }
             nrSamples--;
                     
             // Recursive call to the next color.
-            TFColor nextColor = computeCompositeColor1D(currentPos, lightVector, nrSamples, rayVector);
+            TFColor nextColor = computeCompositeColor1D(currentPos, increments, nrSamples, rayVector);
             
             // Compute the composite color of the current and the next color along the ray.
             TFColor compositeColor = new TFColor(0, 0, 0, 0);
             
+            // Composite color is current color over next color, following formula on p. 17 on slides.
             compositeColor.r = currentColor.a * currentColor.r + (1 - currentColor.a) * nextColor.r;
             compositeColor.g = currentColor.a * currentColor.g + (1 - currentColor.a) * nextColor.g;
             compositeColor.b = currentColor.a * currentColor.b + (1 - currentColor.a) * nextColor.b;
             compositeColor.a = currentColor.a + (1 - currentColor.a) * nextColor.a;
             return compositeColor;
 
-        // Otherwise, return the current color: we either have enough samples or opacity is densed.
+        // Otherwise, return the base case sample.
         } else {
-            currentColor.r *= currentColor.a;
-            currentColor.g *= currentColor.a;
-            currentColor.b *= currentColor.a;
+            currentColor.r *=  currentColor.r;
+            currentColor.g *=  currentColor.g;
+            currentColor.b *=  currentColor.b;
             return currentColor;
         }
     }
