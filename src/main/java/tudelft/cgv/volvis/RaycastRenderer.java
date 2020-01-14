@@ -366,7 +366,7 @@ public int traceRayIso(double[] entryPoint, double[] exitPoint, double[] rayVect
                 currentPos[i] += increments[i];
             }
             nrSamples--;
-                    
+
             // Recursive call to the next color.
             TFColor nextColor = computeCompositeColor1D(currentPos, increments, nrSamples, rayVector);
             
@@ -460,12 +460,6 @@ public int traceRayIso(double[] entryPoint, double[] exitPoint, double[] rayVect
             opacity = (voxel_color.r > 0 || voxel_color.b > 0 || voxel_color.b > 0) ? 1 : 0;
         }
         
-//        if (shadingMode) {
-//            voxel_color = computePhongShading(voxel_color, this.gradients.getGradient(currentPosition), lightVector, rayVector);
-//        }
-            
-        
-            
         r = voxel_color.r;
         g = voxel_color.g;
         b = voxel_color.b;
@@ -507,15 +501,12 @@ public int traceRayIso(double[] entryPoint, double[] exitPoint, double[] rayVect
 
         //Normalized GradientVector
         //If there is no gradient (magnitude is equal to zero, so 0 in x,y,z direction)
-        if(gradient.mag == 0)   return voxel_color;
         double[] normGradientVector = {gradient.x / gradient.mag, gradient.y / gradient.mag, gradient.z / gradient.mag};
 
         //Normalized Light Vector
-        if(VectorMath.length(lightVector) == 0) return voxel_color;
         double[] normLightVector = {lightVector[0] / VectorMath.length(lightVector), lightVector[1] / VectorMath.length(lightVector), lightVector[2] / VectorMath.length(lightVector)};
 
         //Normalized Ray Vector
-        if(VectorMath.length(rayVector) == 0) return voxel_color;
         double[] normRayVector = {rayVector[0] / VectorMath.length(rayVector), rayVector[1] / VectorMath.length(rayVector), rayVector[2] / VectorMath.length(rayVector)};
 
         //cosTheta (gradient vector is our normal vector) 
