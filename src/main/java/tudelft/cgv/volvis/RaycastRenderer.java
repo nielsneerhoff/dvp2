@@ -264,7 +264,6 @@ public int traceRayIso(double[] entryPoint, double[] exitPoint, double[] rayVect
                     r = color.r;
                     g = color.g;
                     b = color.b;
-                    break;
                 }
             } else {
                 

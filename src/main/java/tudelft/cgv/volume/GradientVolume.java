@@ -84,9 +84,9 @@ public void linearInterpolate(VoxelGradient g0, VoxelGradient g1, float factor, 
         int y = (int) Math.floor(coord[1]);
         int z = (int) Math.floor(coord[2]);
         
-        float fac_x = (float) coord[0] - x;
-        float fac_y = (float) coord[1] - y;
-        float fac_z = (float) coord[2] - z;
+        float factorX = (float) coord[0] - x;
+        float factorY = (float) coord[1] - y;
+        float factorZ = (float) coord[2] - z;
         
         VoxelGradient t0 = new VoxelGradient(0,0,0);
         VoxelGradient t1 = new VoxelGradient(0,0,0);
@@ -96,13 +96,13 @@ public void linearInterpolate(VoxelGradient g0, VoxelGradient g1, float factor, 
         VoxelGradient t5 = new VoxelGradient(0,0,0);
         VoxelGradient t6 = new VoxelGradient(0,0,0);
 
-        linearInterpolate(getGradient(x, y, z), getGradient(x+1, y, z), fac_x, t0);
-        linearInterpolate(getGradient(x, y+1, z), getGradient(x+1, y+1, z), fac_x, t1);
-        linearInterpolate(getGradient(x, y, z+1), getGradient(x+1, y, z+1), fac_x, t2);
-        linearInterpolate(getGradient(x, y+1, z+1), getGradient(x+1, y+1, z+1), fac_x, t3);
-        linearInterpolate(t0, t1, fac_y, t4);
-        linearInterpolate(t2, t3, fac_y, t5);
-        linearInterpolate(t4, t5, fac_z, t6);
+        linearInterpolate(getGradient(x, y, z), getGradient(x+1, y, z), factorX, t0);
+        linearInterpolate(getGradient(x, y+1, z), getGradient(x+1, y+1, z), factorX, t1);
+        linearInterpolate(getGradient(x, y, z+1), getGradient(x+1, y, z+1), factorX, t2);
+        linearInterpolate(getGradient(x, y+1, z+1), getGradient(x+1, y+1, z+1), factorX, t3);
+        linearInterpolate(t0, t1, factorY, t4);
+        linearInterpolate(t2, t3, factorY, t5);
+        linearInterpolate(t4, t5, factorZ, t6);
         
         return t6; 
     }
