@@ -383,39 +383,39 @@ public int traceRayIso(double[] entryPoint, double[] exitPoint, double[] rayVect
         }
     }
     
-    // Initial guess on this function, to be implemented later.
-//    TFColor computeCompositeColor2D(double[] currentPos, double[] lightVector, int nrSamples, double[] rayVector) {
-//        
-//        // Compute the color at this position on the ray.
-//        int value = (int) volume.getVoxelLinearInterpolate(currentPos); // TODO: Should we use linear or tricube?
-//        TFColor currentColor = tFunc2D.color;
-//        double mag = this.gradients.getGradient(currentPos).mag;
-//        double currentOpacity = this.computeOpacity2DTF(tFunc2D.baseIntensity, tFunc2D.radius, value, mag) * currentColor.a;
-//            
-//        // Draw next sample if we have insufficient samples. // TOOD: Why not have additional condition AND a < 1?
-//        if (nrSamples >= 0) {
-//
-//            // Reorientate the position to the next sample step along the ray.
-//            for (int i = 0; i < 3; i++) {
-//                currentPos[i] += lightVector[i];
-//            }
-//            nrSamples--;
-//            
-//            // Recursive call to the next color.
-//            TFColor nextColor = computeCompositeColor2D(currentPos, lightVector, nrSamples, rayVector);   
-//
-//            // Compute the composite color of the current and the next color along the ray.
-//            TFColor compositeColor = new TFColor(0, 0, 0, 0);
-//            compositeColor.r = currentOpacity * currentColor.r + (1 - currentOpacity) * nextColor.r;
-//            compositeColor.g = currentOpacity * currentColor.g + (1 - currentOpacity) * nextColor.g;
-//            compositeColor.b = currentOpacity * currentColor.b + (1 - currentOpacity) * nextColor.b;
-//            compositeColor.a = currentOpacity + (1 - currentOpacity) * nextColor.a;
-//            return compositeColor;
-//        
-//        } else {
-//            return new TFColor(0,0,0,0);
-//        }
-//    }
+    TFColor computeCompositeColor2D(double[] currentPos, double[] lightVector, int nrSamples, double[] rayVector) {
+        
+        // Compute the color at this position on the ray.
+        int value = (int) volume.getVoxelLinearInterpolate(currentPos); // TODO: Should we use linear or tricube?
+        TFColor currentColor = tFunc2D.color;
+        double gradientMagnitude = this.gradients.getGradient(currentPos).mag;
+        double currentOpacity = this.computeOpacity2DTF(tFunc2D.baseIntensity, tFunc2D.radius, value, gradientMagnitude) * currentColor.a;
+            
+        // Draw a new sample if we have insufficient samples and the opacity is not densed.
+        if (nrSamples >= 0 && currentColor.a <= 1) {
+
+            // Reorientate the position to the next sample step along the ray.
+            for (int i = 0; i < 3; i++) {
+                currentPos[i] += lightVector[i];
+            }
+            nrSamples--;
+            
+            // Recursive call to the next color.
+            TFColor nextColor = computeCompositeColor2D(currentPos, lightVector, nrSamples, rayVector);   
+
+            // Compute the composite color of the current and the next color along the ray.
+            TFColor compositeColor = new TFColor(0, 0, 0, 0);
+            compositeColor.r = currentOpacity * currentColor.r + (1 - currentOpacity) * nextColor.r;
+            compositeColor.g = currentOpacity * currentColor.g + (1 - currentOpacity) * nextColor.g;
+            compositeColor.b = currentOpacity * currentColor.b + (1 - currentOpacity) * nextColor.b;
+            compositeColor.a = currentOpacity + (1 - currentOpacity) * nextColor.a;
+            return compositeColor;
+        
+        // Otherwise, return the current color: we either have enough samples or opacity is densed. TODO: Why do we do this?
+        } else {
+            return new TFColor(0, 0, 0, 0);
+        }
+    }
     
     public int traceRayComposite(double[] entryPoint, double[] exitPoint, double[] rayVector, double sampleStep) {
         
@@ -437,11 +437,12 @@ public int traceRayIso(double[] entryPoint, double[] exitPoint, double[] rayVect
         VectorMath.setVector(currentPosition, entryPoint[0], entryPoint[1], entryPoint[2]);
         
         TFColor voxel_color = new TFColor();
+        TFColor color = new TFColor();
         
         // Depending on the mode, compute the color.
         if (compositingMode) {
             // 1D transfer function.
-            TFColor color = computeCompositeColor1D(currentPosition, lightVector, nrOfSamples, rayVector);
+            color = computeCompositeColor1D(currentPosition, lightVector, nrOfSamples, rayVector);
             
             voxel_color.r = color.r;
             voxel_color.g = color.g;
@@ -452,22 +453,22 @@ public int traceRayIso(double[] entryPoint, double[] exitPoint, double[] rayVect
         }    
         if (tf2dMode) {
             // 2D transfer function.
+            color = computeCompositeColor2D(currentPosition, lightVector, nrOfSamples, rayVector);
             
-            // Shading mode on
-            voxel_color.r = 1;
-            voxel_color.g = 0;
-            voxel_color.b = 1;
-            voxel_color.a = 1;
+            voxel_color.r = color.r;
+            voxel_color.g = color.g;
+            voxel_color.b = color.b;
+            voxel_color.a = color.a;
             opacity = 1;
         }
-        if (shadingMode) {
-            // Shading mode on
-            voxel_color.r = 1;
-            voxel_color.g =0;
-            voxel_color.b =1;
-            voxel_color.a =1;
-            opacity = 1;     
-        }
+//        if (shadingMode) {
+//            color = computePhongShading(color, this.gradients.getGradient(currentPosition), lightVector, rayVector);
+//            voxel_color.r = color.r;
+//            voxel_color.g = color.g;
+//            voxel_color.b = color.b;
+//            voxel_color.a = color.a;
+//            opacity = 1;     
+//        }
             
         r = voxel_color.r;
         g = voxel_color.g;
@@ -659,14 +660,21 @@ public int traceRayIso(double[] entryPoint, double[] exitPoint, double[] rayVect
 // Compute the opacity based on the value of the pixel and the values of the
 // triangle widget tFunc2D contains the values of the baseintensity and radius
 // tFunc2D.baseIntensity, tFunc2D.radius they are in image intensity units
-
+// TODO: Elaborate, comment.
 public double computeOpacity2DTF(double material_value, double material_r,
         double voxelValue, double gradMagnitude) {
     
-    double opacity = 1;
+    // Compute the angle of the voxel, determined by its gradient.
+    double angleOfVoxel = Math.atan(Math.abs(voxelValue - material_value) / gradMagnitude);
+    // Compute the angle set in the widget, relative to the highest gradient.
+    double angleInWidget = Math.atan(material_r / gradients.getMaxGradientMagnitude());
     
-    // To be implemented.
-    return opacity;
+    // If the angle set in the widget contains the angle of the current voxel.
+    if(angleOfVoxel < angleInWidget) {
+        // Give opaqueness to this voxel relative to the ratio of angles.
+        return (1 - (angleOfVoxel / angleInWidget)) * tFunc2D.color.a;  
+    }
+    return 0.0;
 }  
 
   //////////////////////////////////////////////////////////////////////
