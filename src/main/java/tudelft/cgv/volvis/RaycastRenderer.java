@@ -447,6 +447,27 @@ public int traceRayIso(double[] entryPoint, double[] exitPoint, double[] rayVect
     public TFColor computePhongShading(TFColor voxel_color, VoxelGradient gradient, double[] lightVector,
             double[] rayVector) {
 
+       //PhongShading parameters
+        
+        
+        //Material property constants
+        //kAmbient 
+        double ka = 0.1; 
+        //kDiffuse 
+        double kd = 0.7;
+        //kSpecular 
+        double ks = 0.2;
+        //Alpha 
+        int alpha = 100;  
+        
+        // Material Color (vector -RGB) Ci,a Ci,d Ci,s = voxel_color
+        
+        //Light properties(usually all 1.0,1.0,1.0, from slides)
+        double[] La = {1,1,1}; 
+        double[] Ld = {1,1,1}; 
+        double[] Ls = {1,1,1}; 
+        
+        
         // To be implemented 
         
         TFColor color = new TFColor(0,0,0,1);
