@@ -256,7 +256,7 @@ public int traceRayIso(double[] entryPoint, double[] exitPoint, double[] rayVect
                 // Set alpha to 1: this ray should map to a full color on the screen.
                 alpha = 1;
 
-               // bisection_accuracy(currentPosition, increments, sampleStep, nextValue, currentValue, iso_value);
+                bisection_accuracy(currentPosition, increments, sampleStep, nextValue, currentValue, iso_value);
 //                System.out.println(nrSamples + Arrays.toString(currentPosition));
                 if (shadingMode) {
                     TFColor color = new TFColor(r, g, b, alpha);
