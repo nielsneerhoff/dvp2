@@ -355,7 +355,7 @@ public int traceRayIso(double[] entryPoint, double[] exitPoint, double[] rayVect
         TFColor currentColor = tFunc.getColor(value);
         
         // Draw a new sample if we have insufficient samples and early ray termination criterion is not met.
-        if(nrSamples >= 0 && currentColor.a < 0.9) {
+        if(nrSamples >= 0 && currentColor.a < 0.999) {
 
             if(shadingMode && currentColor.r > 0 && currentColor.g > 0 && currentColor.b > 0) {
                 currentColor = computePhongShading(currentColor, gradients.getGradient(currentPos), increments, rayVector);
@@ -398,7 +398,7 @@ public int traceRayIso(double[] entryPoint, double[] exitPoint, double[] rayVect
         double currentOpacity = this.computeOpacity2DTF(tFunc2D.baseIntensity, tFunc2D.radius, value, gradientMagnitude) * currentColor.a;
             
         // Draw a new sample if we have insufficient samples and the opacity is not densed.
-        if (nrSamples >= 0 && currentColor.a <= 1) {
+        if (nrSamples >= 0 && currentColor.a < 0.999) {
 
             // Reorientate the position to the next sample step along the ray.
             for (int i = 0; i < 3; i++) {
