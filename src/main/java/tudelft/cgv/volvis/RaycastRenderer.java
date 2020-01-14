@@ -17,6 +17,7 @@ import tudelft.cgv.volume.Volume;
 import tudelft.cgv.volume.VoxelGradient;
 
 import java.awt.Color;
+import java.util.Arrays;
 
 
 /**
@@ -220,98 +221,124 @@ public class RaycastRenderer extends Renderer implements TFChangeListener {
 public int traceRayIso(double[] entryPoint, double[] exitPoint, double[] rayVector, double sampleStep) {
        
         double[] lightVector = new double[3];
-        //We define the light vector as directed toward the view point (which is the source of the light)
+        // We define the light vector as directed toward the view point (which is the source of the light)
         // another light vector would be possible
          VectorMath.setVector(lightVector, rayVector[0], rayVector[1], rayVector[2]);
        
         //Initialization of the colors as floating point values
-        double r, g, b;
         double alpha = 0.0;
-       
-        // isoColor contains the isosurface color from the interface
-         r = isoColor.r;g = isoColor.g;b =isoColor.b;
-      
-        //double opacity = 0;
+        double r = isoColor.r;
+        double g = isoColor.g;
+        double b = isoColor.b;
         
-              
-        // To be Implemented this function right now just gives back a constant color: 
-        
-         //compute the increments
+         // Compute the increments
         double[] increments = new double[3];
         VectorMath.setVector(increments, rayVector[0] * sampleStep, rayVector[1] * sampleStep, rayVector[2] * sampleStep);
         
-        // Compute the number of times we need to sample
+        // Compute the number of times we need to sample.
         double distance = VectorMath.distance(entryPoint, exitPoint);
         int nrSamples = 1 + (int) Math.floor(VectorMath.distance(entryPoint, exitPoint) / sampleStep);
 
-        //the current position is initialized as the entry point
-        double[] currentPos = new double[3];
-        VectorMath.setVector(currentPos, entryPoint[0], entryPoint[1], entryPoint[2]);
+        // The current position is initialized as the entry point.
+        double[] currentPosition = new double[3];
+        double[] nextPosition = new double[3];
+        VectorMath.setVector(currentPosition, entryPoint[0], entryPoint[1], entryPoint[2]);
+        VectorMath.setVector(nextPosition, entryPoint[0] + increments[0], entryPoint[1]+ increments[1], entryPoint[2] + increments[2]);
         
-        double value;
-        
-         do {
-            value = volume.getVoxelLinearInterpolate(currentPos);
+        do {
+            float currentValue = volume.getVoxelLinearInterpolate(currentPosition);
+            float nextValue = volume.getVoxelLinearInterpolate(nextPosition);
            
-            if (value > iso_value) {
-                alpha = 1;
+            // If the isovalue is between current value and next value, perform bisection to find exact position.
+            if((Math.floor(currentValue) >= iso_value && Math.floor(nextValue) <  iso_value  )
+            || (Math.floor(currentValue) <  iso_value && Math.floor(nextValue) >= iso_value )){
                 
+                // Set alpha to 1: this ray should map to a full color on the screen.
+                alpha = 1;
+
+               // bisection_accuracy(currentPosition, increments, sampleStep, nextValue, currentValue, iso_value);
+//                System.out.println(nrSamples + Arrays.toString(currentPosition));
                 if (shadingMode) {
                     TFColor color = new TFColor(r, g, b, alpha);
-                    color = computePhongShading(color, gradients.getGradient(currentPos), lightVector, rayVector);
+                    color = computePhongShading(color, gradients.getGradient(currentPosition), lightVector, rayVector);
                     r = color.r;
                     g = color.g;
                     b = color.b;
                     break;
                 }
+            } else {
                 
-                
-            }
-            //Updating currentPos
-            //for (int i = 0; i < 3; i++) {
-                currentPos[0] += increments[0];  
-                currentPos[1] += increments[1];
-                currentPos[2] += increments[2];
-            //}
-            nrSamples--;
-        } while (nrSamples > 0);
+                // Move once step further along the ray (with step size equal to increments).
+                VectorMath.setVector(currentPosition, 
+                        currentPosition[0] + increments[0],
+                        currentPosition[1] + increments[1],
+                        currentPosition[2] + increments[2]);
+                VectorMath.setVector(nextPosition, 
+                        nextPosition[0] + increments[0],
+                        nextPosition[1] + increments[1],
+                        nextPosition[2] + increments[2]);
+                nrSamples--;
 
-        //computes the color
-        int color = computeImageColor(r,g,b,alpha);
-        return color;
+            }
+        } while (nrSamples > 0 && alpha == 0);
+
+        // Computes the color to display the current ray to.
+        return computeImageColor(r, g, b, alpha);
     }
    
     //////////////////////////////////////////////////////////////////////
     ///////////////// FUNCTION TO BE IMPLEMENTED /////////////////////////
-    ////////////////////////////////////////////////////////////////////// 
-    
+    //////////////////////////////////////////////////////////////////////
     // Given the current sample position, increment vector of the sample (vector from previous sample to current sample) and sample Step. 
-    // Previous sample value and current sample value, isovalue value
+    // Previous sample value and current sample value, isovalue value.
     // The function should search for a position where the iso_value passes that it is more precise.
-   public void  bisection_accuracy (double[] currentPos, double[] increments, double sampleStep, float previousvalue, float value, float iso_value) {
-        // COPIED.
-        double tol;
-        int found_Value=0;
-        float iso_half;
-                        
-        double[] previousPos = {currentPos[0] - increments[0], currentPos[1] - increments[1], currentPos[2] - increments[2]};
-           
-        do {
-            double[] half = {(currentPos[0] + previousPos[0]) / 2, (currentPos[1] + previousPos[1]) / 2, (currentPos[2] + previousPos[2]) / 2}; 
-            iso_half = volume.getVoxelLinearInterpolate(half);
-            tol=Math.sqrt(Math.pow(currentPos[0], 2) + Math.pow(currentPos[1], 2) + Math.pow(currentPos[2], 2))-Math.sqrt(Math.pow(previousPos[0], 2) + Math.pow(previousPos[1], 2) + Math.pow(previousPos[2], 2));
-            if (iso_half == iso_value) {
-                currentPos = half;
-                found_Value = 1;
-            } else if (iso_half > iso_value) {
-                currentPos = half;
-            } else if (iso_half < iso_value) {
-                previousPos = half;
-            }
-        }  while (found_Value == 0 && tol>0.001);
+    // TODO: Comment.
+   public void  bisection_accuracy (double[] currentPosition, double[] increments, double sampleStep, float nextValue, float currentValue, 
+           float iso_value) {
+        
+        // Calculate next position according to current position and increments.
+        double[] nextPosition = new double[3];
+        VectorMath.setVector(nextPosition, 
+                currentPosition[0] + increments[0], 
+                currentPosition[1] + increments[1], 
+                currentPosition[2] + increments[2]);
        
-//        return currentPos;
-        // COPIED.
+        // Calculate the left and rightmost positions, where the left position corresponds to the one with lowest value.
+        double[] leftPosition = (Math.floor(currentValue) < iso_value) ? currentPosition : nextPosition;   
+        double[] rightPosition = (Math.floor(currentValue) < iso_value) ? nextPosition : currentPosition;
+        
+        // Perform binary search between left position and right position to find position where value equals isovalue.
+        while(Math.floor(VectorMath.distance(leftPosition, rightPosition)) > 0) {
+            
+            // Take the middle of left and right position.
+            double[] midPosition = new double[3];
+            VectorMath.setVector(midPosition, 
+                    (currentPosition[0] + nextPosition[0]) / 2,
+                    (currentPosition[1] + nextPosition[1]) / 2,
+                    (currentPosition[2] + nextPosition[2]) / 2);
+            
+            double midValue = volume.getVoxelLinearInterpolate(midPosition);
+            
+            // TODO: Do this with an epsilon? Or not necessary because we floor?
+            if(Math.floor(midValue) == iso_value){
+                 VectorMath.setVector(currentPosition, midPosition[0], midPosition[1], midPosition[2]);
+                 return;
+            }
+            else {
+                // The isovalue has not been located, if the current mid position is higher, go left otherwise go right.
+                if(Math.floor(midValue) < iso_value) {
+                    VectorMath.setVector(leftPosition, midPosition[0], midPosition[1], midPosition[2]);
+                } else {
+                    VectorMath.setVector(rightPosition, midPosition[0], midPosition[1], midPosition[2]);
+                }
+            }
+        }
+        
+        // If the left and right vector are 'too close', we treat them as equal and set current position equal to one of them.
+        VectorMath.setVector(currentPosition, 
+            leftPosition[0],
+            leftPosition[1],
+            leftPosition[2]);
    }
     
     //////////////////////////////////////////////////////////////////////
@@ -506,9 +533,9 @@ public int traceRayIso(double[] entryPoint, double[] exitPoint, double[] rayVect
         double[] R = {x_gradVec[0] - lightNormVector[0], x_gradVec[1] - lightNormVector[1], x_gradVec[2] - lightNormVector[2]};
         double cos2 = VectorMath.dotproduct(rayNormVector,R );
         
-        double r = La[0] * ka * voxel_color.r + Ld[0] * kd * voxel_color.r * cos1 + Ls[0] * ks * voxel_color.r * Math.pow(cos2, alpha);
-        double g = La[1] * ka * voxel_color.g + Ld[1] * kd * voxel_color.g * cos1 + Ls[1] * ks * voxel_color.g * Math.pow(cos2, alpha);
-        double b = La[2] * ka * voxel_color.b + Ld[2] * kd * voxel_color.b * cos1 + Ls[2] * ks * voxel_color.b * Math.pow(cos2, alpha);
+        double r = La[0] * ka * voxel_color.r + Ld[0] * kd * voxel_color.r * cosTheta + Ls[0] * ks * voxel_color.r * Math.pow(cos2, alpha);
+        double g = La[1] * ka * voxel_color.g + Ld[1] * kd * voxel_color.g * cosTheta + Ls[1] * ks * voxel_color.g * Math.pow(cos2, alpha);
+        double b = La[2] * ka * voxel_color.b + Ld[2] * kd * voxel_color.b * cosTheta + Ls[2] * ks * voxel_color.b * Math.pow(cos2, alpha);
       
         if (r < 0) {
             r = 0;
