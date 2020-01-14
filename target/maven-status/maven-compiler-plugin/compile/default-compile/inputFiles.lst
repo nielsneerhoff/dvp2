@@ -1,19 +1,19 @@
-/Users/nielsneerhoff/Documents/Uni/MY1/IN4086-14 Data Visualization/Project II/tu-delft-volvis/ForStudents/src/main/java/tudelft/cgv/util/VectorMath.java
-/Users/nielsneerhoff/Documents/Uni/MY1/IN4086-14 Data Visualization/Project II/tu-delft-volvis/ForStudents/src/main/java/tudelft/cgv/gui/RaycastRendererPanel.java
-/Users/nielsneerhoff/Documents/Uni/MY1/IN4086-14 Data Visualization/Project II/tu-delft-volvis/ForStudents/src/main/java/tudelft/cgv/volume/GradientVolume.java
-/Users/nielsneerhoff/Documents/Uni/MY1/IN4086-14 Data Visualization/Project II/tu-delft-volvis/ForStudents/src/main/java/tudelft/cgv/volvis/Renderer.java
-/Users/nielsneerhoff/Documents/Uni/MY1/IN4086-14 Data Visualization/Project II/tu-delft-volvis/ForStudents/src/main/java/tudelft/cgv/gui/TransferFunctionEditor.java
-/Users/nielsneerhoff/Documents/Uni/MY1/IN4086-14 Data Visualization/Project II/tu-delft-volvis/ForStudents/src/main/java/tudelft/cgv/volvis/TransferFunction.java
-/Users/nielsneerhoff/Documents/Uni/MY1/IN4086-14 Data Visualization/Project II/tu-delft-volvis/ForStudents/src/main/java/tudelft/cgv/gui/TransferFunctionView.java
-/Users/nielsneerhoff/Documents/Uni/MY1/IN4086-14 Data Visualization/Project II/tu-delft-volvis/ForStudents/src/main/java/tudelft/cgv/volvis/Visualization.java
-/Users/nielsneerhoff/Documents/Uni/MY1/IN4086-14 Data Visualization/Project II/tu-delft-volvis/ForStudents/src/main/java/tudelft/cgv/volvis/TransferFunction2D.java
-/Users/nielsneerhoff/Documents/Uni/MY1/IN4086-14 Data Visualization/Project II/tu-delft-volvis/ForStudents/src/main/java/tudelft/cgv/gui/TransferFunction2DEditor.java
-/Users/nielsneerhoff/Documents/Uni/MY1/IN4086-14 Data Visualization/Project II/tu-delft-volvis/ForStudents/src/main/java/tudelft/cgv/volume/VoxelGradient.java
-/Users/nielsneerhoff/Documents/Uni/MY1/IN4086-14 Data Visualization/Project II/tu-delft-volvis/ForStudents/src/main/java/tudelft/cgv/volume/VolumeIO.java
-/Users/nielsneerhoff/Documents/Uni/MY1/IN4086-14 Data Visualization/Project II/tu-delft-volvis/ForStudents/src/main/java/tudelft/cgv/volvis/RaycastRenderer.java
-/Users/nielsneerhoff/Documents/Uni/MY1/IN4086-14 Data Visualization/Project II/tu-delft-volvis/ForStudents/src/main/java/tudelft/cgv/volvis/TFColor.java
-/Users/nielsneerhoff/Documents/Uni/MY1/IN4086-14 Data Visualization/Project II/tu-delft-volvis/ForStudents/src/main/java/tudelft/cgv/gui/VolVisApplication.java
-/Users/nielsneerhoff/Documents/Uni/MY1/IN4086-14 Data Visualization/Project II/tu-delft-volvis/ForStudents/src/main/java/tudelft/cgv/util/TrackballInteractor.java
-/Users/nielsneerhoff/Documents/Uni/MY1/IN4086-14 Data Visualization/Project II/tu-delft-volvis/ForStudents/src/main/java/tudelft/cgv/gui/TransferFunction2DView.java
-/Users/nielsneerhoff/Documents/Uni/MY1/IN4086-14 Data Visualization/Project II/tu-delft-volvis/ForStudents/src/main/java/tudelft/cgv/volume/Volume.java
-/Users/nielsneerhoff/Documents/Uni/MY1/IN4086-14 Data Visualization/Project II/tu-delft-volvis/ForStudents/src/main/java/tudelft/cgv/util/TFChangeListener.java
+/Users/evester/Desktop/Master/DataVis/dvp2-master/src/main/java/tudelft/cgv/gui/TransferFunction2DView.java
+/Users/evester/Desktop/Master/DataVis/dvp2-master/src/main/java/tudelft/cgv/gui/RaycastRendererPanel.java
+/Users/evester/Desktop/Master/DataVis/dvp2-master/src/main/java/tudelft/cgv/volume/VolumeIO.java
+/Users/evester/Desktop/Master/DataVis/dvp2-master/src/main/java/tudelft/cgv/volvis/TransferFunction2D.java
+/Users/evester/Desktop/Master/DataVis/dvp2-master/src/main/java/tudelft/cgv/volvis/Visualization.java
+/Users/evester/Desktop/Master/DataVis/dvp2-master/src/main/java/tudelft/cgv/volume/VoxelGradient.java
+/Users/evester/Desktop/Master/DataVis/dvp2-master/src/main/java/tudelft/cgv/gui/TransferFunctionView.java
+/Users/evester/Desktop/Master/DataVis/dvp2-master/src/main/java/tudelft/cgv/volume/GradientVolume.java
+/Users/evester/Desktop/Master/DataVis/dvp2-master/src/main/java/tudelft/cgv/util/VectorMath.java
+/Users/evester/Desktop/Master/DataVis/dvp2-master/src/main/java/tudelft/cgv/volvis/Renderer.java
+/Users/evester/Desktop/Master/DataVis/dvp2-master/src/main/java/tudelft/cgv/gui/TransferFunction2DEditor.java
+/Users/evester/Desktop/Master/DataVis/dvp2-master/src/main/java/tudelft/cgv/gui/VolVisApplication.java
+/Users/evester/Desktop/Master/DataVis/dvp2-master/src/main/java/tudelft/cgv/volume/Volume.java
+/Users/evester/Desktop/Master/DataVis/dvp2-master/src/main/java/tudelft/cgv/gui/TransferFunctionEditor.java
+/Users/evester/Desktop/Master/DataVis/dvp2-master/src/main/java/tudelft/cgv/volvis/TFColor.java
+/Users/evester/Desktop/Master/DataVis/dvp2-master/src/main/java/tudelft/cgv/util/TFChangeListener.java
+/Users/evester/Desktop/Master/DataVis/dvp2-master/src/main/java/tudelft/cgv/util/TrackballInteractor.java
+/Users/evester/Desktop/Master/DataVis/dvp2-master/src/main/java/tudelft/cgv/volvis/RaycastRenderer.java
+/Users/evester/Desktop/Master/DataVis/dvp2-master/src/main/java/tudelft/cgv/volvis/TransferFunction.java

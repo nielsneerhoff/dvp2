@@ -255,6 +255,17 @@ public int traceRayIso(double[] entryPoint, double[] exitPoint, double[] rayVect
            
             if (value > iso_value) {
                 alpha = 1;
+                
+                if (shadingMode) {
+                    TFColor color = new TFColor(r, g, b, alpha);
+                    color = computePhongShading(color, gradients.getGradient(currentPos), lightVector, rayVector);
+                    r = color.r;
+                    g = color.g;
+                    b = color.b;
+                    break;
+                }
+                
+                
             }
             //Updating currentPos
             //for (int i = 0; i < 3; i++) {
@@ -468,12 +479,59 @@ public int traceRayIso(double[] entryPoint, double[] exitPoint, double[] rayVect
         double[] Ls = {1,1,1}; 
         
         
-        // To be implemented 
+        TFColor color;
+
+       
+
+        //Normalized GradientVector
+        //If there is no gradient (magnitude is equal to zero, so 0 in x,y,z direction)
+        if(gradient.mag == 0)   return voxel_color;
+        double[] gradVec = {gradient.x / gradient.mag, gradient.y / gradient.mag, gradient.z / gradient.mag};
+
+        //Normalized Vector Light
+        if(VectorMath.length(lightVector) == 0) return voxel_color;
+        double[] lightNormVector = {lightVector[0] / VectorMath.length(lightVector), lightVector[1] / VectorMath.length(lightVector), lightVector[2] / VectorMath.length(lightVector)};
+
+        //Normalized Vector Ray
+        if(VectorMath.length(rayVector) == 0) return voxel_color;
+        double[] rayNormVector = {rayVector[0] / VectorMath.length(rayVector), rayVector[1] / VectorMath.length(rayVector), rayVector[2] / VectorMath.length(rayVector)};
+
+        //cosTheta
+        double cosTheta = VectorMath.dotproduct(lightNormVector, gradVec);
+
+        //R
+        double[] twice_gradVec = {gradVec[0] * 2, gradVec[1] * 2, gradVec[2] * 2};
+        double x = VectorMath.dotproduct(twice_gradVec, lightNormVector);
+        double[] x_gradVec = {gradVec[0] * x, gradVec[1] * x, gradVec[2] * x};
+        double[] R = {x_gradVec[0] - lightNormVector[0], x_gradVec[1] - lightNormVector[1], x_gradVec[2] - lightNormVector[2]};
+        double cos2 = VectorMath.dotproduct(rayNormVector,R );
         
-        TFColor color = new TFColor(0,0,0,1);
-        
-        
+        double r = La[0] * ka * voxel_color.r + Ld[0] * kd * voxel_color.r * cos1 + Ls[0] * ks * voxel_color.r * Math.pow(cos2, alpha);
+        double g = La[1] * ka * voxel_color.g + Ld[1] * kd * voxel_color.g * cos1 + Ls[1] * ks * voxel_color.g * Math.pow(cos2, alpha);
+        double b = La[2] * ka * voxel_color.b + Ld[2] * kd * voxel_color.b * cos1 + Ls[2] * ks * voxel_color.b * Math.pow(cos2, alpha);
+      
+        if (r < 0) {
+            r = 0;
+        }
+        if (g < 0) {
+            g = 0;
+        }
+        if (b < 0) {
+            b = 0;
+        }
+        if (r > 1) {
+            r = 1;
+        }
+        if (g > 1) {
+            g = 1;
+        }
+        if (b > 1) {
+            b = 1;
+        }
+       
+        color = new TFColor(r, g, b, voxel_color.a);
         return color;
+       
     }
     
     
