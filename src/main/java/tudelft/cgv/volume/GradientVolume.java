@@ -52,7 +52,131 @@ public class GradientVolume {
         }
         maxmag=calculateMaxGradientMagnitude();
      }
+    
+    
+    
+    
+    
+    
+    
+    
+    //////// NEW
+
+    float a = -0.75f; // global variable that defines the value of a used in cubic interpolation. TODO: Choose right value.
+        
+    // Function that computes the weights for one of the 4 samples involved in the interpolation. 
+    public float weight (float t, Boolean one_two_sample){
+         float absoluteT = Math.abs(t);
+         float absoluteTSquared = (float) Math.pow(absoluteT,2);
+         float absoluteTCubed = (float) Math.pow(absoluteT,3);
+
+         // Implemented formula on the page 26 of the slides.
+         if(0 <= absoluteT && absoluteT <1){
+            return (a + 2) * absoluteTCubed - (a + 3) * absoluteTSquared + 1;
+        } else if(1 <= absoluteT && absoluteT < 2) {
+            return a * absoluteTCubed - 5 * a * absoluteTSquared + 8 * a * absoluteT - 4 * a;
+        } else {
+            return 0f;
+        }
+    }
+    
+    public float cubicInterpolate (float g0, float g1, float g2, float g3, float factor) {
+        
+        // We assume that the distance between neighbouring voxels is 1 in all directions,
+        // so h(t) takes as argument t = ((x - i delta_x) / delta_x) = factor - i.
+        float weight0 = weight(factor + 1, false);
+        float weight1 = weight(factor, false);
+        float weight2 = weight(factor - 1, false);
+        float weight3 = weight(factor - 2, false);
+        
+        // Take the weighted sum of our 3 voxels.
+        float expectedValue = g0 * weight0 + g1 * weight1 + g2 * weight2 + g3 * weight3;
+        
+        // Clamp the values such that no negative values may be returned.
+//        expectedValue = Math.max(0, expectedValue);
+
+        return expectedValue;
+    }
+    
+    // Returns the cubic-interpolated gradient of 4 gradients in 1D.
+    public VoxelGradient gradientInterpolate(VoxelGradient g0, VoxelGradient g1, VoxelGradient g2, VoxelGradient g3, float factor) {        
+        return new VoxelGradient(
+                cubicInterpolate(g0.x, g1.x, g2.x, g3.x, factor), 
+                cubicInterpolate(g0.y, g1.y, g2.y, g3.y, factor), 
+                cubicInterpolate(g0.z, g1.z, g2.z, g3.z, factor));
+    }
+    
+    // Returns the cubic-interpolated gradient of 4 x 4 gradients (hence 2D).
+    public VoxelGradient bicubicinterpolateXY (double[] coord, int z) {
+        int x = (int) Math.floor(coord[0]);
+        int y = (int) Math.floor(coord[1]);
+        
+        // Compute factor, the distance from gradient g1 to the position we want to interpolate to.
+        float factorX = (float) (coord[0] - x);
+        float factorY = (float) (coord[1] - y);
+        
+        // Interpolate four points along the x-axis.
+        VoxelGradient x0 = gradientInterpolate(
+                getGradient(x - 1, y - 1, z), 
+                getGradient(x, y - 1, z), 
+                getGradient(x + 1, y - 1, z), 
+                getGradient(x + 2, y - 1, z), 
+                factorX);
+        VoxelGradient x1 = gradientInterpolate(
+                getGradient(x - 1, y, z), 
+                getGradient(x, y, z), 
+                getGradient(x + 1, y, z), 
+                getGradient(x + 2, y, z), 
+                factorX);
+        VoxelGradient x2 = gradientInterpolate(
+                getGradient(x - 1, y + 1, z), 
+                getGradient(x, y + 1, z), 
+                getGradient(x + 1, y + 1, z), 
+                getGradient(x + 2, y + 1, z), 
+                factorX);
+        VoxelGradient x3 = gradientInterpolate(
+                getGradient(x - 1, y + 2, z), 
+                getGradient(x, y + 2, z), 
+                getGradient(x + 1, y + 2, z), 
+                getGradient(x + 2, y + 2, z), 
+                factorX);
+
+        return gradientInterpolate(x0, x1, x2, x3, factorY);
+    }
+    
+    // Returns the cubic-interpolated gradient of 4 x 4 gradients (hence 2D).
+    public VoxelGradient tricubicInterpolate (double[] coord) {
+        if (coord[0] < 1 || coord[0] > (dimX-3) || coord[1] < 1 || coord[1] > (dimY-3)
+                || coord[2] < 1 || coord[2] > (dimZ-3)) {
+            return new VoxelGradient(0, 0, 0);
+        }
+        
+        int z = (int) Math.floor(coord[2]);
+        
+        // Compute factor, the distance from voxel g1 to the position we want to interpolate to.
+        float factorZ = (float) (coord[2] - z);
+
+        // Interpolate four points along the z-axis.
+        VoxelGradient y0 = bicubicinterpolateXY(coord, z - 1);
+        VoxelGradient y1 = bicubicinterpolateXY(coord, z);
+        VoxelGradient y2 = bicubicinterpolateXY(coord, z + 1);
+        VoxelGradient y3 = bicubicinterpolateXY(coord, z + 2);
+
+        return gradientInterpolate(y0, y1, y2, y3, factorZ);
+    }
+    
+//////// NEW
     	
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
     
 //////////////////////////////////////////////////////////////////////
 ///////////////// FUNCTION TO BE IMPLEMENTED /////////////////////////
