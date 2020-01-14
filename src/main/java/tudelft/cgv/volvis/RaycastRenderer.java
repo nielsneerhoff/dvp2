@@ -355,8 +355,8 @@ public int traceRayIso(double[] entryPoint, double[] exitPoint, double[] rayVect
         int value = (int) volume.getVoxelLinearInterpolate(currentPos); // TODO: Should we use linear or tricube?
         TFColor currentColor = tFunc.getColor(value);
         
-        // Draw a new sample if we have insufficient samples and the opacity is not densed.
-        if(nrSamples >= 0 && currentColor.a <= 1) {
+        // Draw a new sample if we have insufficient samples.
+        if(nrSamples >= 0) {
 
             if(shadingMode && currentColor.r > 0 && currentColor.g > 0 && currentColor.b > 0) {
                 currentColor = computePhongShading(currentColor, gradients.getGradient(currentPos), lightVector, rayVector);
