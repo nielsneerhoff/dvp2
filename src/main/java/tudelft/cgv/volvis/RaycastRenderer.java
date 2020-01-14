@@ -216,29 +216,55 @@ public class RaycastRenderer extends Renderer implements TFChangeListener {
     //Function that updates the "image" attribute using the Isosurface raycasting
     //It returns the color assigned to a ray/pixel given it's starting point (entryPoint) and the direction of the ray(rayVector).
     // exitPoint is the last point.
-    //ray must be sampled with a distance defined by the sampleStep
-   
-   public int traceRayIso(double[] entryPoint, double[] exitPoint, double[] rayVector, double sampleStep) {
+    //ray must be sampled with a distance defined by the sampleStep  
+public int traceRayIso(double[] entryPoint, double[] exitPoint, double[] rayVector, double sampleStep) {
        
         double[] lightVector = new double[3];
         //We define the light vector as directed toward the view point (which is the source of the light)
         // another light vector would be possible
          VectorMath.setVector(lightVector, rayVector[0], rayVector[1], rayVector[2]);
        
-        // To be Implemented
-              
         //Initialization of the colors as floating point values
         double r, g, b;
-        r = g = b = 0.0;
         double alpha = 0.0;
-        double opacity = 0;
+       
+        // isoColor contains the isosurface color from the interface
+         r = isoColor.r;g = isoColor.g;b =isoColor.b;
+      
+        //double opacity = 0;
         
               
-        // To be Implemented this function right now just gives back a constant color
+        // To be Implemented this function right now just gives back a constant color: 
         
+         //compute the increments
+        double[] increments = new double[3];
+        VectorMath.setVector(increments, rayVector[0] * sampleStep, rayVector[1] * sampleStep, rayVector[2] * sampleStep);
         
-         // isoColor contains the isosurface color from the interface
-         r = isoColor.r;g = isoColor.g;b =isoColor.b;alpha =1.0;
+        // Compute the number of times we need to sample
+        double distance = VectorMath.distance(entryPoint, exitPoint);
+        int nrSamples = 1 + (int) Math.floor(VectorMath.distance(entryPoint, exitPoint) / sampleStep);
+
+        //the current position is initialized as the entry point
+        double[] currentPos = new double[3];
+        VectorMath.setVector(currentPos, entryPoint[0], entryPoint[1], entryPoint[2]);
+        
+        double value;
+        
+         do {
+            value = volume.getVoxelLinearInterpolate(currentPos);
+           
+            if (value > iso_value) {
+                alpha = 1;
+            }
+            //Updating currentPos
+            //for (int i = 0; i < 3; i++) {
+                currentPos[0] += increments[0];  
+                currentPos[1] += increments[1];
+                currentPos[2] += increments[2];
+            //}
+            nrSamples--;
+        } while (nrSamples > 0);
+
         //computes the color
         int color = computeImageColor(r,g,b,alpha);
         return color;
@@ -251,14 +277,11 @@ public class RaycastRenderer extends Renderer implements TFChangeListener {
     // Given the current sample position, increment vector of the sample (vector from previous sample to current sample) and sample Step. 
     // Previous sample value and current sample value, isovalue value
     // The function should search for a position where the iso_value passes that it is more precise.
-   public void  bisection_accuracy (double[] currentPos, double[] increments, double sampleStep, float previousvalue, float value, float iso_value)
-   {
+   public void  bisection_accuracy (double[] currentPos, double[] increments, double sampleStep, float previousvalue, float value, float iso_value) {
         // COPIED.
         double tol;
         int found_Value=0;
         float iso_half;
-        
-        //double[] teste = {currentPos[0], currentPos[1], currentPos[2]};
                         
         double[] previousPos = {currentPos[0] - increments[0], currentPos[1] - increments[1], currentPos[2] - increments[2]};
            
