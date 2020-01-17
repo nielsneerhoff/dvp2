@@ -382,9 +382,9 @@ public int traceRayIso(double[] entryPoint, double[] exitPoint, double[] rayVect
 
         // Otherwise, return the base case sample.
         } else {
-            currentColor.r *=  currentColor.r;
-            currentColor.g *=  currentColor.g;
-            currentColor.b *=  currentColor.b;
+            currentColor.r *=  currentColor.a;
+            currentColor.g *=  currentColor.a;
+            currentColor.b *=  currentColor.a;
             return currentColor;
         }
     }
