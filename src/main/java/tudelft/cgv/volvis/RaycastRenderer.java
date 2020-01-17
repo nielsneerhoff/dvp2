@@ -496,6 +496,15 @@ public int traceRayIso(double[] entryPoint, double[] exitPoint, double[] rayVect
         double g = La[1] * ka * voxel_color.g + Ld[1] * kd * voxel_color.g * cosTheta + Ls[1] * ks * voxel_color.g * Math.pow(cosPhi, alpha);
         double b = La[2] * ka * voxel_color.b + Ld[2] * kd * voxel_color.b * cosTheta + Ls[2] * ks * voxel_color.b * Math.pow(cosPhi, alpha);
         double a = voxel_color.a;
+        
+        double ksc = 0.9; // Controls the scaling of non-silhouette regions.
+        double kss = 50; // Amount of silhouette enhancement.
+        double kse = 0.25; // Sharpness of the silhouette curve.
+        
+        // Increase the opacity of volume samples where the gradient nears perpendicular to the view direction.
+        //( k +k(1−abs(∇ ⋅V)))
+        double lightVectorDotGradientVector = normGradientVector[0] * normRayVector[0] + normGradientVector[1] * normRayVector[0] + normGradientVector[2]* normRayVector[0];
+        double opacity = ksc + kss * Math.pow((int) (1 - Math.abs(lightVectorDotGradientVector)), 3);
       
         r = Math.max(0, Math.min(1, r));
         g = Math.max(0, Math.min(1, g));
@@ -503,6 +512,8 @@ public int traceRayIso(double[] entryPoint, double[] exitPoint, double[] rayVect
        
         return new TFColor(r, g, b, a);
     }
+    
+    
     
     
     //////////////////////////////////////////////////////////////////////
