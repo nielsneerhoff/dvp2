@@ -52,6 +52,7 @@ public class RaycastRenderer extends Renderer implements TFChangeListener {
     private boolean tf2dMode = false;
     private boolean shadingMode = false;
     private boolean silhouetteMode = false;
+    private int[] lightVector = new int[3];
     private boolean isoMode = false;
     private float iso_value=95; 
     // This is a work around
@@ -441,8 +442,8 @@ public int traceRayIso(double[] entryPoint, double[] exitPoint, double[] rayVect
     public int traceRayComposite(double[] entryPoint, double[] exitPoint, double[] rayVector, double sampleStep) {
         
         // The light vector is directed toward the view point (which is the source of the light).
-        double[] lightVector = new double[3];
-        VectorMath.setVector(lightVector, rayVector[0] * sampleStep, rayVector[1] * sampleStep, rayVector[2] * sampleStep);
+        double[] newLightVector = new double[3];
+        VectorMath.setVector(newLightVector, lightVector[0] * sampleStep, lightVector[1] * sampleStep, lightVector[2] * sampleStep);
 
         // Compute the nr of required samples.
         int nrOfSamples = 1 + (int) Math.floor(VectorMath.distance(entryPoint, exitPoint) / sampleStep);
@@ -456,11 +457,11 @@ public int traceRayIso(double[] entryPoint, double[] exitPoint, double[] rayVect
         // Depending on the mode, compute the color.
         if (compositingMode) {
             // 1D transfer function.
-            voxel_color = computeCompositeColor1D(currentPosition, lightVector, nrOfSamples, rayVector);
+            voxel_color = computeCompositeColor1D(currentPosition, newLightVector, nrOfSamples, rayVector);
             
         } else if (tf2dMode) {
             // 2D transfer function.
-            voxel_color = computeCompositeColor2D(currentPosition, lightVector, nrOfSamples, rayVector);
+            voxel_color = computeCompositeColor2D(currentPosition, newLightVector, nrOfSamples, rayVector);
         }
             
         // Computes the color
@@ -792,11 +793,11 @@ public double computeOpacity2DTF(double material_value, double material_r,
     }
     
     // Function setting silhouette mode to mode.
-    public void setLightVector(double[] lightVector) {
+    public void setLightVector(double lightX, double lightY, double lightZ) {
         System.out.println("Changing lightvector to" + Arrays.toString(lightVector));
-        this.lightVector[0] = lightVector[0];
-        this.lightVector[1] = lightVector[1];
-        this.lightVector[2] = lightVector[2];
+        this.lightVector[0] = (int) lightX;
+        this.lightVector[1] = (int) lightY;
+        this.lightVector[2] = (int) lightZ;
         changed();
     }
         

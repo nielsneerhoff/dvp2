@@ -74,7 +74,7 @@
                                           <Group type="102" alignment="0" attributes="0">
                                               <Component id="jLabel11" min="-2" max="-2" attributes="0"/>
                                               <EmptySpace min="-2" pref="88" max="-2" attributes="0"/>
-                                              <Component id="IsovalueTextBox9" min="-2" pref="45" max="-2" attributes="0"/>
+                                              <Component id="lightZ" min="-2" pref="45" max="-2" attributes="0"/>
                                           </Group>
                                           <Group type="102" alignment="0" attributes="0">
                                               <Group type="103" groupAlignment="0" attributes="0">
@@ -83,8 +83,8 @@
                                               </Group>
                                               <EmptySpace min="-2" pref="88" max="-2" attributes="0"/>
                                               <Group type="103" groupAlignment="0" attributes="0">
-                                                  <Component id="IsovalueTextBox7" alignment="1" min="-2" pref="45" max="-2" attributes="0"/>
-                                                  <Component id="IsovalueTextBox8" alignment="1" min="-2" pref="45" max="-2" attributes="0"/>
+                                                  <Component id="lightX" alignment="1" min="-2" pref="45" max="-2" attributes="0"/>
+                                                  <Component id="lightY" alignment="1" min="-2" pref="45" max="-2" attributes="0"/>
                                               </Group>
                                           </Group>
                                       </Group>
@@ -212,11 +212,11 @@
                   <Group type="102" alignment="0" attributes="0">
                       <Group type="103" groupAlignment="3" attributes="0">
                           <Component id="jLabel12" alignment="3" min="-2" max="-2" attributes="0"/>
-                          <Component id="IsovalueTextBox7" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="lightX" alignment="3" min="-2" max="-2" attributes="0"/>
                       </Group>
                       <EmptySpace min="-2" pref="11" max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="3" attributes="0">
-                          <Component id="IsovalueTextBox8" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="lightY" alignment="3" min="-2" max="-2" attributes="0"/>
                           <Component id="jLabel10" alignment="3" min="-2" max="-2" attributes="0"/>
                       </Group>
                   </Group>
@@ -224,7 +224,7 @@
               </Group>
               <EmptySpace min="-2" pref="8" max="-2" attributes="0"/>
               <Group type="103" groupAlignment="3" attributes="0">
-                  <Component id="IsovalueTextBox9" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="lightZ" alignment="3" min="-2" max="-2" attributes="0"/>
                   <Component id="jLabel11" alignment="3" min="-2" max="-2" attributes="0"/>
               </Group>
               <EmptySpace max="32767" attributes="0"/>
@@ -470,7 +470,7 @@
         <Property name="text" type="java.lang.String" value="Y:"/>
       </Properties>
     </Component>
-    <Component class="javax.swing.JTextField" name="IsovalueTextBox7">
+    <Component class="javax.swing.JTextField" name="lightX">
       <Properties>
         <Property name="text" type="java.lang.String" value="0"/>
         <Property name="cursor" type="java.awt.Cursor" editor="org.netbeans.modules.form.editors2.CursorEditor">
@@ -478,10 +478,10 @@
         </Property>
       </Properties>
       <Events>
-        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="IsovalueTextBox7ActionPerformed"/>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="lightXActionPerformed"/>
       </Events>
     </Component>
-    <Component class="javax.swing.JTextField" name="IsovalueTextBox8">
+    <Component class="javax.swing.JTextField" name="lightY">
       <Properties>
         <Property name="text" type="java.lang.String" value="0"/>
         <Property name="cursor" type="java.awt.Cursor" editor="org.netbeans.modules.form.editors2.CursorEditor">
@@ -489,10 +489,10 @@
         </Property>
       </Properties>
       <Events>
-        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="IsovalueTextBox8ActionPerformed"/>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="lightYActionPerformed"/>
       </Events>
     </Component>
-    <Component class="javax.swing.JTextField" name="IsovalueTextBox9">
+    <Component class="javax.swing.JTextField" name="lightZ">
       <Properties>
         <Property name="text" type="java.lang.String" value="0"/>
         <Property name="cursor" type="java.awt.Cursor" editor="org.netbeans.modules.form.editors2.CursorEditor">
@@ -500,7 +500,7 @@
         </Property>
       </Properties>
       <Events>
-        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="IsovalueTextBox9ActionPerformed"/>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="lightZActionPerformed"/>
       </Events>
     </Component>
     <Component class="javax.swing.JLabel" name="jLabel11">

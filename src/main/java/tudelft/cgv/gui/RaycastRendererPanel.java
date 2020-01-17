@@ -78,9 +78,9 @@ public class RaycastRendererPanel extends javax.swing.JPanel {
         IsovalueTextBox6 = new javax.swing.JTextField();
         jLabel9 = new javax.swing.JLabel();
         jLabel10 = new javax.swing.JLabel();
-        IsovalueTextBox7 = new javax.swing.JTextField();
-        IsovalueTextBox8 = new javax.swing.JTextField();
-        IsovalueTextBox9 = new javax.swing.JTextField();
+        lightX = new javax.swing.JTextField();
+        lightY = new javax.swing.JTextField();
+        lightZ = new javax.swing.JTextField();
         jLabel11 = new javax.swing.JLabel();
         jLabel12 = new javax.swing.JLabel();
         jLabel13 = new javax.swing.JLabel();
@@ -245,27 +245,27 @@ public class RaycastRendererPanel extends javax.swing.JPanel {
         jLabel10.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
         jLabel10.setText("Y:");
 
-        IsovalueTextBox7.setText("0");
-        IsovalueTextBox7.setCursor(new java.awt.Cursor(java.awt.Cursor.TEXT_CURSOR));
-        IsovalueTextBox7.addActionListener(new java.awt.event.ActionListener() {
+        lightX.setText("0");
+        lightX.setCursor(new java.awt.Cursor(java.awt.Cursor.TEXT_CURSOR));
+        lightX.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                IsovalueTextBox7ActionPerformed(evt);
+                lightXActionPerformed(evt);
             }
         });
 
-        IsovalueTextBox8.setText("0");
-        IsovalueTextBox8.setCursor(new java.awt.Cursor(java.awt.Cursor.TEXT_CURSOR));
-        IsovalueTextBox8.addActionListener(new java.awt.event.ActionListener() {
+        lightY.setText("0");
+        lightY.setCursor(new java.awt.Cursor(java.awt.Cursor.TEXT_CURSOR));
+        lightY.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                IsovalueTextBox8ActionPerformed(evt);
+                lightYActionPerformed(evt);
             }
         });
 
-        IsovalueTextBox9.setText("0");
-        IsovalueTextBox9.setCursor(new java.awt.Cursor(java.awt.Cursor.TEXT_CURSOR));
-        IsovalueTextBox9.addActionListener(new java.awt.event.ActionListener() {
+        lightZ.setText("0");
+        lightZ.setCursor(new java.awt.Cursor(java.awt.Cursor.TEXT_CURSOR));
+        lightZ.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                IsovalueTextBox9ActionPerformed(evt);
+                lightZActionPerformed(evt);
             }
         });
 
@@ -317,15 +317,15 @@ public class RaycastRendererPanel extends javax.swing.JPanel {
                                             .addGroup(layout.createSequentialGroup()
                                                 .addComponent(jLabel11)
                                                 .addGap(88, 88, 88)
-                                                .addComponent(IsovalueTextBox9, javax.swing.GroupLayout.PREFERRED_SIZE, 45, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                                .addComponent(lightZ, javax.swing.GroupLayout.PREFERRED_SIZE, 45, javax.swing.GroupLayout.PREFERRED_SIZE))
                                             .addGroup(layout.createSequentialGroup()
                                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                                     .addComponent(jLabel10)
                                                     .addComponent(jLabel12))
                                                 .addGap(88, 88, 88)
                                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                                    .addComponent(IsovalueTextBox7, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 45, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                                    .addComponent(IsovalueTextBox8, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 45, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                                                    .addComponent(lightX, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 45, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                                    .addComponent(lightY, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 45, javax.swing.GroupLayout.PREFERRED_SIZE))))
                                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                                             .addGroup(layout.createSequentialGroup()
                                                 .addComponent(jLabel9)
@@ -421,15 +421,15 @@ public class RaycastRendererPanel extends javax.swing.JPanel {
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(jLabel12)
-                            .addComponent(IsovalueTextBox7, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(lightX, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addGap(11, 11, 11)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(IsovalueTextBox8, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(lightY, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(jLabel10)))
                     .addComponent(jLabel13))
                 .addGap(8, 8, 8)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(IsovalueTextBox9, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(lightZ, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel11))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -516,17 +516,26 @@ public class RaycastRendererPanel extends javax.swing.JPanel {
         // TODO add your handling code here:
     }//GEN-LAST:event_IsovalueTextBox6ActionPerformed
 
-    private void IsovalueTextBox7ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_IsovalueTextBox7ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_IsovalueTextBox7ActionPerformed
+    private void lightXActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_lightXActionPerformed
+        double x = Float.parseFloat(this.lightX.getText());
+        double y = Float.parseFloat(this.lightY.getText());
+        double z = Float.parseFloat(this.lightZ.getText());
+        renderer.setLightVector(x, y, z);
+    }//GEN-LAST:event_lightXActionPerformed
 
-    private void IsovalueTextBox8ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_IsovalueTextBox8ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_IsovalueTextBox8ActionPerformed
+    private void lightYActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_lightYActionPerformed
+        double x = Float.parseFloat(this.lightX.getText());
+        double y = Float.parseFloat(this.lightY.getText());
+        double z = Float.parseFloat(this.lightZ.getText());
+        renderer.setLightVector(x, y, z);
+    }//GEN-LAST:event_lightYActionPerformed
 
-    private void IsovalueTextBox9ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_IsovalueTextBox9ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_IsovalueTextBox9ActionPerformed
+    private void lightZActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_lightZActionPerformed
+        double x = Float.parseFloat(this.lightX.getText());
+        double y = Float.parseFloat(this.lightY.getText());
+        double z = Float.parseFloat(this.lightZ.getText());
+        renderer.setLightVector(x, y, z);
+    }//GEN-LAST:event_lightZActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JRadioButton IsoSurface;
@@ -537,9 +546,6 @@ public class RaycastRendererPanel extends javax.swing.JPanel {
     private javax.swing.JTextField IsovalueTextBox4;
     private javax.swing.JTextField IsovalueTextBox5;
     private javax.swing.JTextField IsovalueTextBox6;
-    private javax.swing.JTextField IsovalueTextBox7;
-    private javax.swing.JTextField IsovalueTextBox8;
-    private javax.swing.JTextField IsovalueTextBox9;
     private javax.swing.JSlider Resolution;
     private javax.swing.JLabel Resolution_label;
     private javax.swing.ButtonGroup buttonGroup1;
@@ -560,6 +566,9 @@ public class RaycastRendererPanel extends javax.swing.JPanel {
     private javax.swing.JLabel jLabel9;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTree jTree1;
+    private javax.swing.JTextField lightX;
+    private javax.swing.JTextField lightY;
+    private javax.swing.JTextField lightZ;
     private javax.swing.JRadioButton mipButton;
     private javax.swing.JLabel renderingSpeedLabel;
     private javax.swing.JCheckBox shadingCheckbox;
