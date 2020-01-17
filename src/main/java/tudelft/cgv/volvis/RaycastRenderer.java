@@ -351,15 +351,14 @@ public int traceRayIso(double[] entryPoint, double[] exitPoint, double[] rayVect
     TFColor computeCompositeColor1D(double[] currentPos, double[] increments, int nrSamples, double[] rayVector) {
         
         // Compute the color at this position on the ray.
-        int value = (int) volume.getVoxelLinearInterpolate(currentPos); // TODO: Should we use linear or tricube?
+        int value = (int) volume.getVoxelLinearInterpolate(currentPos);
         TFColor currentColor = tFunc.getColor(value);
         
         // Draw a new sample if we have insufficient samples and early ray termination criterion is not met.
         if(nrSamples >= 0 && currentColor.a < 0.999) {
 
-            if(shadingMode && currentColor.r > 0 && currentColor.g > 0 && currentColor.b > 0) {
-                currentColor = computePhongShading(currentColor, gradients.getGradient(currentPos), increments, rayVector);
-            }
+            // Phong-shade the current color.
+            currentColor = computePhongShading(currentColor, gradients.getGradient(currentPos), increments, rayVector);
             
             // Reorientate the position to the next sample step along the ray.
             for (int i = 0; i < 3; i++) {
@@ -371,14 +370,12 @@ public int traceRayIso(double[] entryPoint, double[] exitPoint, double[] rayVect
             TFColor nextColor = computeCompositeColor1D(currentPos, increments, nrSamples, rayVector);
             
             // Compute the composite color of the current and the next color along the ray.
-            TFColor compositeColor = new TFColor(0, 0, 0, 0);
-            
-            // Composite color is current color over next color, following formula on p. 17 on slides.
-            compositeColor.r = currentColor.a * currentColor.r + (1 - currentColor.a) * nextColor.r;
-            compositeColor.g = currentColor.a * currentColor.g + (1 - currentColor.a) * nextColor.g;
-            compositeColor.b = currentColor.a * currentColor.b + (1 - currentColor.a) * nextColor.b;
-            compositeColor.a = currentColor.a + (1 - currentColor.a) * nextColor.a;
-            return compositeColor;
+            return new TFColor(
+                currentColor.a * currentColor.r + (1 - currentColor.a) * nextColor.r,
+                currentColor.a * currentColor.g + (1 - currentColor.a) * nextColor.g,
+                currentColor.a * currentColor.b + (1 - currentColor.a) * nextColor.b,
+                currentColor.a + (1 - currentColor.a) * nextColor.a
+            );
 
         // Otherwise, return the base case sample.
         } else {
@@ -399,10 +396,9 @@ public int traceRayIso(double[] entryPoint, double[] exitPoint, double[] rayVect
             
         // Draw a new sample if we have insufficient samples and the opacity is not densed.
         if (nrSamples >= 0 && currentColor.a < 0.999) {
-
-            if(shadingMode && currentColor.r > 0 && currentColor.g > 0 && currentColor.b > 0) {
-                currentColor = computePhongShading(currentColor, gradients.getGradient(currentPos), lightVector, rayVector);
-            }
+            
+            // Phong-shade the current color.
+            currentColor = computePhongShading(currentColor, gradients.getGradient(currentPos), lightVector, rayVector);
                         
             // Reorientate the position to the next sample step along the ray.
             for (int i = 0; i < 3; i++) {
@@ -414,13 +410,12 @@ public int traceRayIso(double[] entryPoint, double[] exitPoint, double[] rayVect
             TFColor nextColor = computeCompositeColor2D(currentPos, lightVector, nrSamples, rayVector);   
 
             // Compute the composite color of the current and the next color along the ray.
-            TFColor compositeColor = new TFColor(0, 0, 0, 0);
-            compositeColor.r = currentOpacity * currentColor.r + (1 - currentOpacity) * nextColor.r;
-            compositeColor.g = currentOpacity * currentColor.g + (1 - currentOpacity) * nextColor.g;
-            compositeColor.b = currentOpacity * currentColor.b + (1 - currentOpacity) * nextColor.b;
-            compositeColor.a = currentOpacity + (1 - currentOpacity) * nextColor.a;
-            return compositeColor;
-        
+            return new TFColor(
+                currentOpacity * currentColor.r + (1 - currentOpacity) * nextColor.r,
+                currentOpacity * currentColor.g + (1 - currentOpacity) * nextColor.g,
+                currentOpacity * currentColor.b + (1 - currentOpacity) * nextColor.b,
+                currentOpacity + (1 - currentOpacity) * nextColor.a
+            );
         // Otherwise, return the current color: we either have enough samples or opacity is densed.
         } else {
             return new TFColor(0, 0, 0, 0);
@@ -433,15 +428,9 @@ public int traceRayIso(double[] entryPoint, double[] exitPoint, double[] rayVect
         double[] lightVector = new double[3];
         VectorMath.setVector(lightVector, rayVector[0] * sampleStep, rayVector[1] * sampleStep, rayVector[2] * sampleStep);
 
-         // Compute the nr of required samples.
-         int nrOfSamples = 1 + (int) Math.floor(VectorMath.distance(entryPoint, exitPoint) / sampleStep);
-        
-        // Initialization of the colors as floating point values.
-        double r, g, b;
-        r = g = b = 0.0;
-        double alpha = 0;
-        double opacity = 0;
-        
+        // Compute the nr of required samples.
+        int nrOfSamples = 1 + (int) Math.floor(VectorMath.distance(entryPoint, exitPoint) / sampleStep);
+
         // The current position along the ray is the entry point.
         double[] currentPosition = new double[3];
         VectorMath.setVector(currentPosition, entryPoint[0], entryPoint[1], entryPoint[2]);
@@ -452,27 +441,14 @@ public int traceRayIso(double[] entryPoint, double[] exitPoint, double[] rayVect
         if (compositingMode) {
             // 1D transfer function.
             voxel_color = computeCompositeColor1D(currentPosition, lightVector, nrOfSamples, rayVector);
-//            opacity = voxel_color.a;
-            opacity = 1;
             
         } else if (tf2dMode) {
             // 2D transfer function.
             voxel_color = computeCompositeColor2D(currentPosition, lightVector, nrOfSamples, rayVector);
-//            opacity = voxel_color.a;
-            opacity = 1;
         }
-        if(shadingMode) {
-            opacity = voxel_color.a;
-//            opacity = (voxel_color.r > 0 || voxel_color.b > 0 || voxel_color.b > 0) ? 1 : 0;
-        }
-        
-        r = voxel_color.r;
-        g = voxel_color.g;
-        b = voxel_color.b;
-        alpha = opacity;
             
         // Computes the color
-        return computeImageColor(r, g, b, alpha);
+        return computeImageColor(voxel_color.r, voxel_color.g, voxel_color.b, voxel_color.a);
     }
     
     //////////////////////////////////////////////////////////////////////
@@ -482,43 +458,35 @@ public int traceRayIso(double[] entryPoint, double[] exitPoint, double[] rayVect
     public TFColor computePhongShading(TFColor voxel_color, VoxelGradient gradient, double[] lightVector,
             double[] rayVector) {
 
-       //PhongShading parameters
+        // Material property constants
+        double ka = 0.1; // Ambient. 
+        double kd = 0.7; // Diffuse.
+        double ks = 0.2; // Specular.
+        int alpha = 100; // Alpha.
         
+        double lightLength = VectorMath.length(lightVector);
+        double rayLength = VectorMath.length(rayVector);
         
-        //Material property constants
-        //kAmbient 
-        double ka = 0.1; 
-        //kDiffuse 
-        double kd = 0.7;
-        //kSpecular 
-        double ks = 0.2;
-        //Alpha 
-        int alpha = 100;  
+        // No shading needed if mode is not on, if the color is black or white, or if the vectors have length 0
+        if(!shadingMode || (voxel_color.r == 0 && voxel_color.g == 0 && voxel_color.b == 0) 
+                || lightLength == 0 || rayLength == 0 || gradient.mag == 0) {
+            return voxel_color;
+        }
         
-        // Material Color (vector -RGB) Ci,a Ci,d Ci,s = voxel_color
-        
-        //Light properties(usually all 1.0,1.0,1.0, from slides)
-        double[] La = {1,1,1}; 
-        double[] Ld = {1,1,1}; 
-        double[] Ls = {1,1,1}; 
-        
-        
-        TFColor color;
+        // Light properties(usually all 1.0,1.0,1.0, from slides)
+        double[] La = {1, 1, 1};
+        double[] Ld = {1, 1, 1};
+        double[] Ls = {1, 1, 1};
 
-        //Normalized GradientVector
-        //If there is no gradient (magnitude is equal to zero, so 0 in x,y,z direction)
+        // Normalized vectors.
+        double[] normLightVector = {lightVector[0] / lightLength, lightVector[1] / lightLength, lightVector[2] / lightLength};
         double[] normGradientVector = {gradient.x / gradient.mag, gradient.y / gradient.mag, gradient.z / gradient.mag};
-
-        //Normalized Light Vector
-        double[] normLightVector = {lightVector[0] / VectorMath.length(lightVector), lightVector[1] / VectorMath.length(lightVector), lightVector[2] / VectorMath.length(lightVector)};
-
-        //Normalized Ray Vector
-        double[] normRayVector = {rayVector[0] / VectorMath.length(rayVector), rayVector[1] / VectorMath.length(rayVector), rayVector[2] / VectorMath.length(rayVector)};
-
-        //cosTheta (gradient vector is our normal vector) 
+        double[] normRayVector = {rayVector[0] / rayLength, rayVector[1] / rayLength, rayVector[2] / rayLength};
+        
+        // cosTheta (gradient vector is our normal vector) 
         double cosTheta = VectorMath.dotproduct(normLightVector, normGradientVector);
 
-        //R
+        // R
         double temp = VectorMath.dotproduct(normGradientVector, normLightVector) * 2;
         double[] temptimesGradientVector = {normGradientVector[0] * temp, normGradientVector[1] * temp, normGradientVector[2] * temp};
         double[] R = {temptimesGradientVector[0] - normLightVector[0], temptimesGradientVector[1] - normLightVector[1], temptimesGradientVector[2] - normLightVector[2]};
@@ -529,18 +497,11 @@ public int traceRayIso(double[] entryPoint, double[] exitPoint, double[] rayVect
         double b = La[2] * ka * voxel_color.b + Ld[2] * kd * voxel_color.b * cosTheta + Ls[2] * ks * voxel_color.b * Math.pow(cosPhi, alpha);
         double a = voxel_color.a;
       
-        if (r < 0) {r = 0;}
-        if (r > 1) {r = 1;}
-   
-        if (g < 0) {g = 0;}
-        if (g > 1) {g = 1;}
-        
-        if (b < 0) {b = 0;}
-        if (b > 1) {b = 1;}
+        r = Math.max(0, Math.min(1, r));
+        g = Math.max(0, Math.min(1, g));
+        b = Math.max(0, Math.min(1, b));
        
-        color = new TFColor(r, g, b, a);
-        return color;
-       
+        return new TFColor(r, g, b, a);
     }
     
     
