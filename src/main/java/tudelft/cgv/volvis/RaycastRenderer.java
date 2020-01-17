@@ -352,6 +352,7 @@ public int traceRayIso(double[] entryPoint, double[] exitPoint, double[] rayVect
         // Compute the color at this position on the ray.
         int value = (int) volume.getVoxelLinearInterpolate(currentPos);
         TFColor currentColor;
+        VoxelGradient gradient = gradients.getGradient(currentPos);
         
         if(compositingMode) {
             // 1D Transfer function.
@@ -359,15 +360,14 @@ public int traceRayIso(double[] entryPoint, double[] exitPoint, double[] rayVect
         } else {
             // 2D Transfer function.
             currentColor = tFunc2D.color;
-            double gradientMagnitude = gradients.getGradient(currentPos).mag;
-//            currentColor.a = computeOpacity2DTF(tFunc2D.baseIntensity, tFunc2D.radius, value, gradientMagnitude);
+            currentColor.a = computeOpacity2DTF(tFunc2D.baseIntensity, tFunc2D.radius, value, gradient.mag);
         }
         
         // Draw a new sample if we have insufficient samples and early ray termination criterion is not met.
         if(nrSamples >= 0 && currentColor.a < 0.999) {
 
             if(shadingMode && (currentColor.r > 0 || currentColor.g > 0 || currentColor.b > 0)) {
-                currentColor = computePhongShading(currentColor, gradients.getGradient(currentPos), increments, rayVector);
+                currentColor = computePhongShading(currentColor, gradient, increments, rayVector);
             }
             
             // Reorientate the position to the next sample step along the ray.
@@ -411,8 +411,8 @@ public int traceRayIso(double[] entryPoint, double[] exitPoint, double[] rayVect
         double[] currentPosition = new double[3];
         VectorMath.setVector(currentPosition, entryPoint[0], entryPoint[1], entryPoint[2]);
         
-        TFColor voxel_color = computeCompositeColor(currentPosition, lightVector, nrOfSamples, rayVector);      
-        // Computes the color
+        // Computes the color.
+        TFColor voxel_color = computeCompositeColor(currentPosition, lightVector, nrOfSamples, rayVector);
         return computeImageColor(voxel_color.r, voxel_color.g, voxel_color.b, voxel_color.a);
     }
     
