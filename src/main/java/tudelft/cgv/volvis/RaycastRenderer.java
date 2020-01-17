@@ -260,7 +260,7 @@ public int traceRayIso(double[] entryPoint, double[] exitPoint, double[] rayVect
 //                System.out.println(nrSamples + Arrays.toString(currentPosition));
                 if (shadingMode) {
                     TFColor color = new TFColor(r, g, b, alpha);
-                    color = computePhongShading(color, gradients.tricubicInterpolate(currentPosition), lightVector, rayVector);
+                    color = computePhongShading(color, gradients.getGradient(currentPosition), lightVector, rayVector);
                     r = color.r;
                     g = color.g;
                     b = color.b;
@@ -394,14 +394,14 @@ public int traceRayIso(double[] entryPoint, double[] exitPoint, double[] rayVect
         // Compute the color at this position on the ray.
         int value = (int) volume.getVoxelLinearInterpolate(currentPos); // TODO: Should we use linear or tricube?
         TFColor currentColor = tFunc2D.color;
-        double gradientMagnitude = this.gradients.tricubicInterpolate(currentPos).mag;
+        double gradientMagnitude = this.gradients.getGradient(currentPos).mag;
         double currentOpacity = this.computeOpacity2DTF(tFunc2D.baseIntensity, tFunc2D.radius, value, gradientMagnitude) * currentColor.a;
             
         // Draw a new sample if we have insufficient samples and the opacity is not densed.
         if (nrSamples >= 0 && currentColor.a < 0.999) {
 
             if(shadingMode && currentColor.r > 0 && currentColor.g > 0 && currentColor.b > 0) {
-                currentColor = computePhongShading(currentColor, gradients.tricubicInterpolate(currentPos), lightVector, rayVector);
+                currentColor = computePhongShading(currentColor, gradients.getGradient(currentPos), lightVector, rayVector);
             }
                         
             // Reorientate the position to the next sample step along the ray.
