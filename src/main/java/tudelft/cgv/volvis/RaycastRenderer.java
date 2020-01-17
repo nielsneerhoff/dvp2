@@ -349,18 +349,21 @@ public int traceRayIso(double[] entryPoint, double[] exitPoint, double[] rayVect
     //ray must be sampled with a distance defined by the sampleStep
     TFColor computeCompositeColor(double[] currentPos, double[] increments, int nrSamples, double[] rayVector) {
         
-        // Compute the color at this position on the ray.
+        // Compute the data intensity and gradient at this position in the ray.
         int value = (int) volume.getVoxelLinearInterpolate(currentPos);
-        TFColor currentColor;
-        VoxelGradient gradient = gradients.getGradient(currentPos);
+        VoxelGradient gradient = this.gradients.getGradient(currentPos);
         
+        // Compute the color at this position in the ray.
+        TFColor currentColor;
         if(compositingMode) {
             // 1D Transfer function.
             currentColor = tFunc.getColor(value);
         } else {
             // 2D Transfer function.
             currentColor = tFunc2D.color;
-            currentColor.a = computeOpacity2DTF(tFunc2D.baseIntensity, tFunc2D.radius, value, gradient.mag);
+//            currentColor.a = 1;
+            currentColor.a = computeOpacity2DTF(tFunc2D.baseIntensity, tFunc2D.radius, value, gradient.mag) * currentColor.a;
+//            System.out.println(currentColor.a);
         }
         
         // Draw a new sample if we have insufficient samples and early ray termination criterion is not met.
@@ -376,18 +379,16 @@ public int traceRayIso(double[] entryPoint, double[] exitPoint, double[] rayVect
             }
             nrSamples--;
 
-            // Recursive call to the next color.
+            // Recursive call to the next color on the ray.
             TFColor nextColor = computeCompositeColor(currentPos, increments, nrSamples, rayVector);
             
             // Compute the composite color of the current and the next color along the ray.
-            TFColor compositeColor = new TFColor(0, 0, 0, 0);
-            
-            // Composite color is current color over next color, following formula on p. 17 on slides.
-            compositeColor.r = currentColor.a * currentColor.r + (1 - currentColor.a) * nextColor.r;
-            compositeColor.g = currentColor.a * currentColor.g + (1 - currentColor.a) * nextColor.g;
-            compositeColor.b = currentColor.a * currentColor.b + (1 - currentColor.a) * nextColor.b;
-            compositeColor.a = currentColor.a + (1 - currentColor.a) * nextColor.a;
-            return compositeColor;
+            return new TFColor(
+                    currentColor.a * currentColor.r + (1 - currentColor.a) * nextColor.r,
+                    currentColor.a * currentColor.g + (1 - currentColor.a) * nextColor.g,
+                    currentColor.a * currentColor.b + (1 - currentColor.a) * nextColor.b,
+                    currentColor.a + (1 - currentColor.a) * nextColor.a
+            );
 
         // Otherwise, return the base case sample.
         } else {
@@ -404,8 +405,8 @@ public int traceRayIso(double[] entryPoint, double[] exitPoint, double[] rayVect
         double[] lightVector = new double[3];
         VectorMath.setVector(lightVector, rayVector[0] * sampleStep, rayVector[1] * sampleStep, rayVector[2] * sampleStep);
 
-         // Compute the nr of required samples.
-         int nrOfSamples = 1 + (int) Math.floor(VectorMath.distance(entryPoint, exitPoint) / sampleStep);
+        // Compute the nr of required samples.
+        int nrOfSamples = 1 + (int) Math.floor(VectorMath.distance(entryPoint, exitPoint) / sampleStep);
         
         // The current position along the ray is the entry point.
         double[] currentPosition = new double[3];
@@ -589,13 +590,15 @@ public double computeOpacity2DTF(double material_value, double material_r,
     // Compute the angle set in the widget, relative to the highest gradient.
     double angleInWidget = Math.atan(material_r / gradients.getMaxGradientMagnitude());
     
+    System.out.println(angleOfVoxel + " " + angleInWidget);
+    
     // If the angle set in the widget contains the angle of the current voxel.
     if(angleOfVoxel < angleInWidget) {
         // Give opaqueness to this voxel relative to the ratio of angles.
-//        return 1;
-        return (1 - (angleOfVoxel / angleInWidget)) * tFunc2D.color.a;
+        return 1;
+//        return (1 - (angleOfVoxel / angleInWidget)) * tFunc2D.color.a;
     }
-    return 0;
+    return 0.5;
 }  
 
   //////////////////////////////////////////////////////////////////////
