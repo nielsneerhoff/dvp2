@@ -421,7 +421,7 @@ public int traceRayIso(double[] entryPoint, double[] exitPoint, double[] rayVect
             compositeColor.a = currentOpacity + (1 - currentOpacity) * nextColor.a;
             return compositeColor;
         
-        // Otherwise, return the current color: we either have enough samples or opacity is densed. TODO: Why do we do this?
+        // Otherwise, return the current color: we either have enough samples or opacity is densed.
         } else {
             return new TFColor(0, 0, 0, 0);
         }
@@ -650,12 +650,8 @@ public double computeOpacity2DTF(double material_value, double material_r,
     // Compute the angle set in the widget, relative to the highest gradient.
     double angleInWidget = Math.atan(material_r / gradients.getMaxGradientMagnitude());
     
-    // If the angle set in the widget contains the angle of the current voxel.
-    if(angleOfVoxel < angleInWidget) {
-        // Give opaqueness to this voxel relative to the ratio of angles.
-        return (1 - (angleOfVoxel / angleInWidget)) * tFunc2D.color.a;  
-    }
-    return 0.0;
+    // If the angle set in the widget contains the angle of the current voxel, return full opacity.
+    return angleOfVoxel < angleInWidget ? 1 : 0;
 }  
 
   //////////////////////////////////////////////////////////////////////
