@@ -51,6 +51,7 @@ public class RaycastRenderer extends Renderer implements TFChangeListener {
     private boolean compositingMode = false;
     private boolean tf2dMode = false;
     private boolean shadingMode = false;
+    private boolean silhouetteMode = false;
     private boolean isoMode = false;
     private float iso_value=95; 
     // This is a work around
@@ -198,13 +199,8 @@ public class RaycastRenderer extends Renderer implements TFChangeListener {
             nrSamples--;
         } while (nrSamples > 0);
 
-        double alpha;
+        double alpha = maximum > 0 ? 1 : 0; // If the max voxel has a value make it fully opaque.
         double r, g, b;
-        if (maximum > 0.0) { // if the maximum = 0 make the voxel transparent
-            alpha = 1.0;
-        } else {
-            alpha = 0.0;
-        }
         r = g = b = maximum;
         int color = computeImageColor(r,g,b,alpha);
         return color;
@@ -423,14 +419,12 @@ public int traceRayIso(double[] entryPoint, double[] exitPoint, double[] rayVect
         }
     }
     
-    boolean silhouetteModus = true;
-    
     // Increases the opacity of volume samples where the gradient nears perpendicular to the view direction.
     // @param gradient      gradient object.
     // @param rayVector     the vector of light.
     // @return              a new opacity for the voxel.
     public double silhouetteOpacity(double currentOpacity, VoxelGradient gradient, double[] rayVector) {
-        if(currentOpacity > 0 && silhouetteModus) {
+        if(currentOpacity > 0 && silhouetteMode) {
             double ksc = 0.1;       // Controls the scaling of non-silhouette regions.
             double kss = 50;        // Amount of silhouette enhancement.
             double kse = 0.25;      // Inversly controls sharpness of the silhouette curve.
@@ -441,7 +435,7 @@ public int traceRayIso(double[] entryPoint, double[] exitPoint, double[] rayVect
             return Math.min(ksc + kss * Math.pow((int) (1 - Math.abs(lightVectorDotNormGradientVector)), kse), 1);
         }
         // If there is no opacity, then we do not want to 'add'.
-        return 0;
+        return currentOpacity;
     }
     
     public int traceRayComposite(double[] entryPoint, double[] exitPoint, double[] rayVector, double sampleStep) {
@@ -789,6 +783,23 @@ public double computeOpacity2DTF(double material_value, double material_r,
         shadingMode = mode;
         changed();
     }
+    
+    // Function setting silhouette mode to mode.
+    public void setSilhouetteMode(boolean mode) {
+        System.out.println("Changing silhouette mode to" + mode);
+        silhouetteMode = mode;
+        changed();
+    }
+    
+    // Function setting silhouette mode to mode.
+    public void setLightVector(double[] lightVector) {
+        System.out.println("Changing lightvector to" + Arrays.toString(lightVector));
+        this.lightVector[0] = lightVector[0];
+        this.lightVector[1] = lightVector[1];
+        this.lightVector[2] = lightVector[2];
+        changed();
+    }
+        
     //Do NOT modify this function
     public void setMIPMode() {
         setMode(false, true, false, false,false);

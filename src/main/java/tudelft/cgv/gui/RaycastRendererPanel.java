@@ -48,6 +48,8 @@ public class RaycastRendererPanel extends javax.swing.JPanel {
     private void initComponents() {
 
         buttonGroup1 = new javax.swing.ButtonGroup();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        jTree1 = new javax.swing.JTree();
         jLabel1 = new javax.swing.JLabel();
         renderingSpeedLabel = new javax.swing.JLabel();
         slicerButton = new javax.swing.JRadioButton();
@@ -62,7 +64,28 @@ public class RaycastRendererPanel extends javax.swing.JPanel {
         Resolution_label = new javax.swing.JLabel();
         colorButton = new javax.swing.JButton();
         jLabel6 = new javax.swing.JLabel();
-        shadingCheckbox1 = new javax.swing.JCheckBox();
+        silhoeutteCheckBox = new javax.swing.JCheckBox();
+        jLabel3 = new javax.swing.JLabel();
+        jLabel4 = new javax.swing.JLabel();
+        IsovalueTextBox1 = new javax.swing.JTextField();
+        IsovalueTextBox2 = new javax.swing.JTextField();
+        IsovalueTextBox3 = new javax.swing.JTextField();
+        jLabel5 = new javax.swing.JLabel();
+        jLabel7 = new javax.swing.JLabel();
+        jLabel8 = new javax.swing.JLabel();
+        IsovalueTextBox4 = new javax.swing.JTextField();
+        IsovalueTextBox5 = new javax.swing.JTextField();
+        IsovalueTextBox6 = new javax.swing.JTextField();
+        jLabel9 = new javax.swing.JLabel();
+        jLabel10 = new javax.swing.JLabel();
+        IsovalueTextBox7 = new javax.swing.JTextField();
+        IsovalueTextBox8 = new javax.swing.JTextField();
+        IsovalueTextBox9 = new javax.swing.JTextField();
+        jLabel11 = new javax.swing.JLabel();
+        jLabel12 = new javax.swing.JLabel();
+        jLabel13 = new javax.swing.JLabel();
+
+        jScrollPane1.setViewportView(jTree1);
 
         jLabel1.setText("Rendering time (ms):");
 
@@ -151,13 +174,108 @@ public class RaycastRendererPanel extends javax.swing.JPanel {
 
         jLabel6.setText("Color");
 
-        shadingCheckbox1.setText("Silhouette enhancement");
-        shadingCheckbox1.setToolTipText("");
-        shadingCheckbox1.addActionListener(new java.awt.event.ActionListener() {
+        silhoeutteCheckBox.setText("Silhouette mode:");
+        silhoeutteCheckBox.setToolTipText("");
+        silhoeutteCheckBox.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                shadingCheckbox1ActionPerformed(evt);
+                silhoeutteCheckBoxActionPerformed(evt);
             }
         });
+
+        jLabel3.setText("Base opacity:");
+
+        jLabel4.setText("Enhancement:");
+
+        IsovalueTextBox1.setText("0");
+        IsovalueTextBox1.setCursor(new java.awt.Cursor(java.awt.Cursor.TEXT_CURSOR));
+        IsovalueTextBox1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                IsovalueTextBox1ActionPerformed(evt);
+            }
+        });
+
+        IsovalueTextBox2.setText("0");
+        IsovalueTextBox2.setCursor(new java.awt.Cursor(java.awt.Cursor.TEXT_CURSOR));
+        IsovalueTextBox2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                IsovalueTextBox2ActionPerformed(evt);
+            }
+        });
+
+        IsovalueTextBox3.setText("0");
+        IsovalueTextBox3.setCursor(new java.awt.Cursor(java.awt.Cursor.TEXT_CURSOR));
+        IsovalueTextBox3.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                IsovalueTextBox3ActionPerformed(evt);
+            }
+        });
+
+        jLabel5.setText("Sharpness:");
+
+        jLabel7.setText("Ambient:");
+
+        jLabel8.setText("Specular:");
+
+        IsovalueTextBox4.setText("0");
+        IsovalueTextBox4.setCursor(new java.awt.Cursor(java.awt.Cursor.TEXT_CURSOR));
+        IsovalueTextBox4.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                IsovalueTextBox4ActionPerformed(evt);
+            }
+        });
+
+        IsovalueTextBox5.setText("0");
+        IsovalueTextBox5.setCursor(new java.awt.Cursor(java.awt.Cursor.TEXT_CURSOR));
+        IsovalueTextBox5.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                IsovalueTextBox5ActionPerformed(evt);
+            }
+        });
+
+        IsovalueTextBox6.setText("0");
+        IsovalueTextBox6.setCursor(new java.awt.Cursor(java.awt.Cursor.TEXT_CURSOR));
+        IsovalueTextBox6.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                IsovalueTextBox6ActionPerformed(evt);
+            }
+        });
+
+        jLabel9.setText("Diffuse:");
+
+        jLabel10.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
+        jLabel10.setText("Y:");
+
+        IsovalueTextBox7.setText("0");
+        IsovalueTextBox7.setCursor(new java.awt.Cursor(java.awt.Cursor.TEXT_CURSOR));
+        IsovalueTextBox7.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                IsovalueTextBox7ActionPerformed(evt);
+            }
+        });
+
+        IsovalueTextBox8.setText("0");
+        IsovalueTextBox8.setCursor(new java.awt.Cursor(java.awt.Cursor.TEXT_CURSOR));
+        IsovalueTextBox8.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                IsovalueTextBox8ActionPerformed(evt);
+            }
+        });
+
+        IsovalueTextBox9.setText("0");
+        IsovalueTextBox9.setCursor(new java.awt.Cursor(java.awt.Cursor.TEXT_CURSOR));
+        IsovalueTextBox9.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                IsovalueTextBox9ActionPerformed(evt);
+            }
+        });
+
+        jLabel11.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
+        jLabel11.setText("Z:");
+
+        jLabel12.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
+        jLabel12.setText("X:");
+
+        jLabel13.setText("Light orientation:");
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
@@ -165,43 +283,90 @@ public class RaycastRendererPanel extends javax.swing.JPanel {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addGroup(layout.createSequentialGroup()
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addGap(0, 0, Short.MAX_VALUE)
                         .addComponent(jLabel1)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(renderingSpeedLabel)
                         .addGap(304, 304, 304))
-                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
-                                .addComponent(Resolution_label)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(Resolution, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addComponent(compositingButton, javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(tf2dButton, javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(mipButton, javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(slicerButton, javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
+                    .addGroup(layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(layout.createSequentialGroup()
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addGroup(layout.createSequentialGroup()
-                                        .addComponent(IsoSurface)
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                        .addComponent(jLabel2))
-                                    .addComponent(shadingCheckbox))
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addGap(62, 62, 62)
+                                        .addComponent(silhoeutteCheckBox))
+                                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                        .addComponent(shadingCheckbox)
+                                        .addGroup(layout.createSequentialGroup()
+                                            .addComponent(Resolution_label)
+                                            .addGap(42, 42, 42))))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(shadingCheckbox1)
                                     .addGroup(layout.createSequentialGroup()
-                                        .addComponent(IsovalueTextBox, javax.swing.GroupLayout.PREFERRED_SIZE, 45, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                            .addComponent(jLabel3)
+                                            .addComponent(jLabel2))
+                                        .addGap(63, 63, 63)
                                         .addComponent(jLabel6)
                                         .addGap(18, 18, 18)
-                                        .addComponent(colorButton, javax.swing.GroupLayout.PREFERRED_SIZE, 75, javax.swing.GroupLayout.PREFERRED_SIZE)))))
-                        .addGap(0, 112, Short.MAX_VALUE))))
+                                        .addComponent(colorButton, javax.swing.GroupLayout.PREFERRED_SIZE, 75, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                            .addGroup(layout.createSequentialGroup()
+                                                .addComponent(jLabel11)
+                                                .addGap(88, 88, 88)
+                                                .addComponent(IsovalueTextBox9, javax.swing.GroupLayout.PREFERRED_SIZE, 45, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                            .addGroup(layout.createSequentialGroup()
+                                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                                    .addComponent(jLabel10)
+                                                    .addComponent(jLabel12))
+                                                .addGap(88, 88, 88)
+                                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                                    .addComponent(IsovalueTextBox7, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 45, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                                    .addComponent(IsovalueTextBox8, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 45, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                            .addGroup(layout.createSequentialGroup()
+                                                .addComponent(jLabel9)
+                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                                .addComponent(IsovalueTextBox6, javax.swing.GroupLayout.PREFERRED_SIZE, 45, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                                                .addComponent(jLabel8)
+                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                                .addComponent(IsovalueTextBox5, javax.swing.GroupLayout.PREFERRED_SIZE, 45, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                                                .addComponent(jLabel7)
+                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                                .addComponent(IsovalueTextBox4, javax.swing.GroupLayout.PREFERRED_SIZE, 45, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                            .addGroup(layout.createSequentialGroup()
+                                                .addComponent(jLabel5)
+                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                                .addComponent(IsovalueTextBox3, javax.swing.GroupLayout.PREFERRED_SIZE, 45, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                            .addGroup(layout.createSequentialGroup()
+                                                .addComponent(jLabel4)
+                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                                    .addComponent(IsovalueTextBox1, javax.swing.GroupLayout.PREFERRED_SIZE, 45, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                                    .addComponent(IsovalueTextBox2, javax.swing.GroupLayout.PREFERRED_SIZE, 45, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                                    .addComponent(IsovalueTextBox, javax.swing.GroupLayout.PREFERRED_SIZE, 45, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                                .addGap(0, 0, Short.MAX_VALUE))))))
+                            .addComponent(IsoSurface)
+                            .addComponent(compositingButton)
+                            .addComponent(mipButton)
+                            .addComponent(slicerButton)
+                            .addComponent(tf2dButton)
+                            .addGroup(layout.createSequentialGroup()
+                                .addGap(193, 193, 193)
+                                .addComponent(Resolution, javax.swing.GroupLayout.PREFERRED_SIZE, 190, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(layout.createSequentialGroup()
+                                .addGap(24, 24, 24)
+                                .addComponent(jLabel13)))
+                        .addContainerGap(129, Short.MAX_VALUE))))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel1)
@@ -212,21 +377,61 @@ public class RaycastRendererPanel extends javax.swing.JPanel {
                 .addComponent(mipButton)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(colorButton, javax.swing.GroupLayout.PREFERRED_SIZE, 29, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(IsoSurface)
+                    .addComponent(colorButton, javax.swing.GroupLayout.PREFERRED_SIZE, 29, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                         .addComponent(IsovalueTextBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addComponent(jLabel2)
                         .addComponent(jLabel6, javax.swing.GroupLayout.PREFERRED_SIZE, 29, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(compositingButton)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(tf2dButton)
-                .addGap(27, 27, 27)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(compositingButton)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(tf2dButton))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(59, 59, 59)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jLabel3)
+                            .addComponent(silhoeutteCheckBox)
+                            .addComponent(IsovalueTextBox1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(12, 12, 12)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jLabel4)
+                            .addComponent(IsovalueTextBox2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(8, 8, 8)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jLabel5)
+                            .addComponent(IsovalueTextBox3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(18, 18, 18)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(shadingCheckbox)
+                            .addComponent(jLabel7)
+                            .addComponent(IsovalueTextBox4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jLabel8)
+                            .addComponent(IsovalueTextBox5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jLabel9)
+                            .addComponent(IsovalueTextBox6, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jLabel12)
+                            .addComponent(IsovalueTextBox7, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(11, 11, 11)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(IsovalueTextBox8, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel10)))
+                    .addComponent(jLabel13))
+                .addGap(8, 8, 8)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(shadingCheckbox)
-                    .addComponent(shadingCheckbox1))
-                .addGap(18, 18, 18)
+                    .addComponent(IsovalueTextBox9, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel11))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(Resolution, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(Resolution_label))
@@ -283,25 +488,82 @@ public class RaycastRendererPanel extends javax.swing.JPanel {
         }
     }//GEN-LAST:event_colorButtonActionPerformed
 
-    private void shadingCheckbox1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_shadingCheckbox1ActionPerformed
-        renderer.setResFactor(this.Resolution.getValue());
-    }//GEN-LAST:event_shadingCheckbox1ActionPerformed
+    private void silhoeutteCheckBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_silhoeutteCheckBoxActionPerformed
+        renderer.setSilhouetteMode(silhoeutteCheckBox.isSelected());
+    }//GEN-LAST:event_silhoeutteCheckBoxActionPerformed
+
+    private void IsovalueTextBox1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_IsovalueTextBox1ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_IsovalueTextBox1ActionPerformed
+
+    private void IsovalueTextBox2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_IsovalueTextBox2ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_IsovalueTextBox2ActionPerformed
+
+    private void IsovalueTextBox3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_IsovalueTextBox3ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_IsovalueTextBox3ActionPerformed
+
+    private void IsovalueTextBox4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_IsovalueTextBox4ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_IsovalueTextBox4ActionPerformed
+
+    private void IsovalueTextBox5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_IsovalueTextBox5ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_IsovalueTextBox5ActionPerformed
+
+    private void IsovalueTextBox6ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_IsovalueTextBox6ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_IsovalueTextBox6ActionPerformed
+
+    private void IsovalueTextBox7ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_IsovalueTextBox7ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_IsovalueTextBox7ActionPerformed
+
+    private void IsovalueTextBox8ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_IsovalueTextBox8ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_IsovalueTextBox8ActionPerformed
+
+    private void IsovalueTextBox9ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_IsovalueTextBox9ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_IsovalueTextBox9ActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JRadioButton IsoSurface;
     private javax.swing.JTextField IsovalueTextBox;
+    private javax.swing.JTextField IsovalueTextBox1;
+    private javax.swing.JTextField IsovalueTextBox2;
+    private javax.swing.JTextField IsovalueTextBox3;
+    private javax.swing.JTextField IsovalueTextBox4;
+    private javax.swing.JTextField IsovalueTextBox5;
+    private javax.swing.JTextField IsovalueTextBox6;
+    private javax.swing.JTextField IsovalueTextBox7;
+    private javax.swing.JTextField IsovalueTextBox8;
+    private javax.swing.JTextField IsovalueTextBox9;
     private javax.swing.JSlider Resolution;
     private javax.swing.JLabel Resolution_label;
     private javax.swing.ButtonGroup buttonGroup1;
     private javax.swing.JButton colorButton;
     private javax.swing.JRadioButton compositingButton;
     private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel10;
+    private javax.swing.JLabel jLabel11;
+    private javax.swing.JLabel jLabel12;
+    private javax.swing.JLabel jLabel13;
     private javax.swing.JLabel jLabel2;
+    private javax.swing.JLabel jLabel3;
+    private javax.swing.JLabel jLabel4;
+    private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
+    private javax.swing.JLabel jLabel7;
+    private javax.swing.JLabel jLabel8;
+    private javax.swing.JLabel jLabel9;
+    private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JTree jTree1;
     private javax.swing.JRadioButton mipButton;
     private javax.swing.JLabel renderingSpeedLabel;
     private javax.swing.JCheckBox shadingCheckbox;
-    private javax.swing.JCheckBox shadingCheckbox1;
+    private javax.swing.JCheckBox silhoeutteCheckBox;
     private javax.swing.JRadioButton slicerButton;
     private javax.swing.JRadioButton tf2dButton;
     // End of variables declaration//GEN-END:variables
