@@ -393,7 +393,8 @@ public int traceRayIso(double[] entryPoint, double[] exitPoint, double[] rayVect
         TFColor currentColor = tFunc2D.color;
         double gradientMagnitude = this.gradients.getGradient(currentPos).mag;
         double currentOpacity = this.computeOpacity2DTF(tFunc2D.baseIntensity, tFunc2D.radius, value, gradientMagnitude) * currentColor.a;
-            
+        currentOpacity = silhouetteOpacity(currentOpacity, this.gradients.getGradient(currentPos), rayVector);
+
         // Draw a new sample if we have insufficient samples and the opacity is not densed.
         if (nrSamples >= 0 && currentColor.a < 0.999) {
             
@@ -420,6 +421,27 @@ public int traceRayIso(double[] entryPoint, double[] exitPoint, double[] rayVect
         } else {
             return new TFColor(0, 0, 0, 0);
         }
+    }
+    
+    boolean silhouetteModus = true;
+    
+    // Increases the opacity of volume samples where the gradient nears perpendicular to the view direction.
+    // @param gradient      gradient object.
+    // @param rayVector     the vector of light.
+    // @return              a new opacity for the voxel.
+    public double silhouetteOpacity(double currentOpacity, VoxelGradient gradient, double[] rayVector) {
+        if(currentOpacity > 0 && silhouetteModus) {
+            double ksc = 0.1;       // Controls the scaling of non-silhouette regions.
+            double kss = 50;        // Amount of silhouette enhancement.
+            double kse = 0.25;      // Inversly controls sharpness of the silhouette curve.
+
+            // Increase the opacity of volume samples where the gradient nears perpendicular to the view direction.
+            double lightVectorDotNormGradientVector = gradient.x * rayVector[0] / gradient.mag + 
+                    gradient.y * rayVector[0] / gradient.mag + gradient.z * rayVector[0] / gradient.mag;
+            return Math.min(ksc + kss * Math.pow((int) (1 - Math.abs(lightVectorDotNormGradientVector)), kse), 1);
+        }
+        // If there is no opacity, then we do not want to 'add'.
+        return 0;
     }
     
     public int traceRayComposite(double[] entryPoint, double[] exitPoint, double[] rayVector, double sampleStep) {
@@ -490,21 +512,12 @@ public int traceRayIso(double[] entryPoint, double[] exitPoint, double[] rayVect
         double temp = VectorMath.dotproduct(normGradientVector, normLightVector) * 2;
         double[] temptimesGradientVector = {normGradientVector[0] * temp, normGradientVector[1] * temp, normGradientVector[2] * temp};
         double[] R = {temptimesGradientVector[0] - normLightVector[0], temptimesGradientVector[1] - normLightVector[1], temptimesGradientVector[2] - normLightVector[2]};
-        double cosPhi = VectorMath.dotproduct(normRayVector,R );
+        double cosPhi = VectorMath.dotproduct(normRayVector, R);
         
         double r = La[0] * ka * voxel_color.r + Ld[0] * kd * voxel_color.r * cosTheta + Ls[0] * ks * voxel_color.r * Math.pow(cosPhi, alpha);
         double g = La[1] * ka * voxel_color.g + Ld[1] * kd * voxel_color.g * cosTheta + Ls[1] * ks * voxel_color.g * Math.pow(cosPhi, alpha);
         double b = La[2] * ka * voxel_color.b + Ld[2] * kd * voxel_color.b * cosTheta + Ls[2] * ks * voxel_color.b * Math.pow(cosPhi, alpha);
         double a = voxel_color.a;
-        
-        double ksc = 0.9; // Controls the scaling of non-silhouette regions.
-        double kss = 50; // Amount of silhouette enhancement.
-        double kse = 0.25; // Sharpness of the silhouette curve.
-        
-        // Increase the opacity of volume samples where the gradient nears perpendicular to the view direction.
-        //( k +k(1−abs(∇ ⋅V)))
-        double lightVectorDotGradientVector = normGradientVector[0] * normRayVector[0] + normGradientVector[1] * normRayVector[0] + normGradientVector[2]* normRayVector[0];
-        double opacity = ksc + kss * Math.pow((int) (1 - Math.abs(lightVectorDotGradientVector)), 3);
       
         r = Math.max(0, Math.min(1, r));
         g = Math.max(0, Math.min(1, g));
