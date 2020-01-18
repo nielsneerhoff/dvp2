@@ -52,7 +52,7 @@ public class RaycastRenderer extends Renderer implements TFChangeListener {
     private boolean tf2dMode = false;
     private boolean shadingMode = false;
     private boolean silhouetteMode = false;
-    private int[] lightVector = new int[3];
+    private double[] lightVector = new double[3];
     private boolean isoMode = false;
     private float iso_value=95; 
     // This is a work around
@@ -217,11 +217,6 @@ public class RaycastRenderer extends Renderer implements TFChangeListener {
     //ray must be sampled with a distance defined by the sampleStep  
 public int traceRayIso(double[] entryPoint, double[] exitPoint, double[] rayVector, double sampleStep) {
        
-        double[] lightVector = new double[3];
-        // We define the light vector as directed toward the view point (which is the source of the light)
-        // another light vector would be possible
-         VectorMath.setVector(lightVector, rayVector[0], rayVector[1], rayVector[2]);
-       
         //Initialization of the colors as floating point values
         double alpha = 0.0;
         double r = isoColor.r;
@@ -257,7 +252,7 @@ public int traceRayIso(double[] entryPoint, double[] exitPoint, double[] rayVect
 //                System.out.println(nrSamples + Arrays.toString(currentPosition));
                 if (shadingMode) {
                     TFColor color = new TFColor(r, g, b, alpha);
-                    color = computePhongShading(color, gradients.getGradient(currentPosition), lightVector, rayVector);
+                    color = computePhongShading(color, gradients.getGradient(currentPosition), rayVector);
                     r = color.r;
                     g = color.g;
                     b = color.b;
@@ -345,7 +340,7 @@ public int traceRayIso(double[] entryPoint, double[] exitPoint, double[] rayVect
     // exitPoint is the last point.
     //ray must be sampled with a distance defined by the sampleStep
    // TODO: Comment.
-    TFColor computeCompositeColor1D(double[] currentPos, double[] increments, int nrSamples, double[] rayVector) {
+    TFColor computeCompositeColor1D(double[] currentPos, int nrSamples, double[] rayVector) {
         
         // Compute the color at this position on the ray.
         int value = (int) volume.getVoxelLinearInterpolate(currentPos);
@@ -355,16 +350,16 @@ public int traceRayIso(double[] entryPoint, double[] exitPoint, double[] rayVect
         if(nrSamples >= 0 && currentColor.a < 0.999) {
 
             // Phong-shade the current color.
-            currentColor = computePhongShading(currentColor, gradients.getGradient(currentPos), increments, rayVector);
+            currentColor = computePhongShading(currentColor, gradients.getGradient(currentPos), rayVector);
             
             // Reorientate the position to the next sample step along the ray.
             for (int i = 0; i < 3; i++) {
-                currentPos[i] += increments[i];
+                currentPos[i] += lightVector[i];
             }
             nrSamples--;
 
             // Recursive call to the next color.
-            TFColor nextColor = computeCompositeColor1D(currentPos, increments, nrSamples, rayVector);
+            TFColor nextColor = computeCompositeColor1D(currentPos, nrSamples, rayVector);
             
             // Compute the composite color of the current and the next color along the ray.
             return new TFColor(
@@ -383,7 +378,7 @@ public int traceRayIso(double[] entryPoint, double[] exitPoint, double[] rayVect
         }
     }
     
-    TFColor computeCompositeColor2D(double[] currentPos, double[] lightVector, int nrSamples, double[] rayVector) {
+    TFColor computeCompositeColor2D(double[] currentPos, double[] increments, int nrSamples, double[] rayVector) {
         
         // Compute the color at this position on the ray.
         int value = (int) volume.getVoxelLinearInterpolate(currentPos); // TODO: Should we use linear or tricube?
@@ -396,16 +391,16 @@ public int traceRayIso(double[] entryPoint, double[] exitPoint, double[] rayVect
         if (nrSamples >= 0 && currentColor.a < 0.999) {
             
             // Phong-shade the current color.
-            currentColor = computePhongShading(currentColor, gradients.getGradient(currentPos), lightVector, rayVector);
+            currentColor = computePhongShading(currentColor, gradients.getGradient(currentPos), rayVector);
                         
             // Reorientate the position to the next sample step along the ray.
             for (int i = 0; i < 3; i++) {
-                currentPos[i] += lightVector[i];
+                currentPos[i] += increments[i];
             }
             nrSamples--;
             
             // Recursive call to the next color.
-            TFColor nextColor = computeCompositeColor2D(currentPos, lightVector, nrSamples, rayVector);   
+            TFColor nextColor = computeCompositeColor2D(currentPos, increments, nrSamples, rayVector);   
 
             // Compute the composite color of the current and the next color along the ray.
             return new TFColor(
@@ -435,15 +430,14 @@ public int traceRayIso(double[] entryPoint, double[] exitPoint, double[] rayVect
                     gradient.y * rayVector[0] / gradient.mag + gradient.z * rayVector[0] / gradient.mag;
             return Math.min(ksc + kss * Math.pow((int) (1 - Math.abs(lightVectorDotNormGradientVector)), kse), 1);
         }
-        // If there is no opacity, then we do not want to 'add'.
+        // If there is no opacity, then we do not want to 'add' opacity.
         return currentOpacity;
     }
     
     public int traceRayComposite(double[] entryPoint, double[] exitPoint, double[] rayVector, double sampleStep) {
         
-        // The light vector is directed toward the view point (which is the source of the light).
-        double[] newLightVector = new double[3];
-        VectorMath.setVector(newLightVector, lightVector[0] * sampleStep, lightVector[1] * sampleStep, lightVector[2] * sampleStep);
+        // The light vector is directed toward the view point.
+        VectorMath.setVector(lightVector, lightVector[0] * sampleStep, lightVector[1] * sampleStep, lightVector[2] * sampleStep);
 
         // Compute the nr of required samples.
         int nrOfSamples = 1 + (int) Math.floor(VectorMath.distance(entryPoint, exitPoint) / sampleStep);
@@ -457,11 +451,11 @@ public int traceRayIso(double[] entryPoint, double[] exitPoint, double[] rayVect
         // Depending on the mode, compute the color.
         if (compositingMode) {
             // 1D transfer function.
-            voxel_color = computeCompositeColor1D(currentPosition, newLightVector, nrOfSamples, rayVector);
+            voxel_color = computeCompositeColor1D(currentPosition, nrOfSamples, rayVector);
             
         } else if (tf2dMode) {
             // 2D transfer function.
-            voxel_color = computeCompositeColor2D(currentPosition, newLightVector, nrOfSamples, rayVector);
+            voxel_color = computeCompositeColor2D(currentPosition, lightVector, nrOfSamples, rayVector);
         }
             
         // Computes the color
@@ -472,7 +466,7 @@ public int traceRayIso(double[] entryPoint, double[] exitPoint, double[] rayVect
     ///////////////// FUNCTION TO BE IMPLEMENTED /////////////////////////
     ////////////////////////////////////////////////////////////////////// 
     // Compute Phong Shading given the voxel color (material color), the gradient, the light vector and view vector 
-    public TFColor computePhongShading(TFColor voxel_color, VoxelGradient gradient, double[] lightVector,
+    public TFColor computePhongShading(TFColor voxel_color, VoxelGradient gradient,
             double[] rayVector) {
 
         // Material property constants
@@ -787,17 +781,17 @@ public double computeOpacity2DTF(double material_value, double material_r,
     
     // Function setting silhouette mode to mode.
     public void setSilhouetteMode(boolean mode) {
-        System.out.println("Changing silhouette mode to" + mode);
         silhouetteMode = mode;
+        System.out.println("Set silhouette mode to" + mode);
         changed();
     }
     
-    // Function setting silhouette mode to mode.
+    // Function setting the light vector proportional to arguments.
     public void setLightVector(double lightX, double lightY, double lightZ) {
-        System.out.println("Changing lightvector to" + Arrays.toString(lightVector));
-        this.lightVector[0] = (int) lightX;
-        this.lightVector[1] = (int) lightY;
-        this.lightVector[2] = (int) lightZ;
+        lightVector[0] = lightX * volume.getDimX();
+        lightVector[1] = lightY * volume.getDimY();
+        lightVector[2] = lightZ * volume.getDimZ();
+        System.out.println("Set lightvector to" + Arrays.toString(lightVector));
         changed();
     }
         
