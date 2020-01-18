@@ -66,18 +66,16 @@ public class RaycastRendererPanel extends javax.swing.JPanel {
         jLabel6 = new javax.swing.JLabel();
         silhoeutteCheckBox = new javax.swing.JCheckBox();
         jLabel3 = new javax.swing.JLabel();
-        jLabel4 = new javax.swing.JLabel();
-        IsovalueTextBox1 = new javax.swing.JTextField();
-        IsovalueTextBox2 = new javax.swing.JTextField();
-        IsovalueTextBox3 = new javax.swing.JTextField();
+        baseOpacity = new javax.swing.JTextField();
+        sharpness = new javax.swing.JTextField();
         jLabel5 = new javax.swing.JLabel();
         jLabel10 = new javax.swing.JLabel();
-        lightX = new javax.swing.JTextField();
-        lightY = new javax.swing.JTextField();
-        lightZ = new javax.swing.JTextField();
         jLabel11 = new javax.swing.JLabel();
         jLabel12 = new javax.swing.JLabel();
         jLabel13 = new javax.swing.JLabel();
+        lightPosX = new javax.swing.JSlider();
+        lightPosZ = new javax.swing.JSlider();
+        lightPosY = new javax.swing.JSlider();
 
         jScrollPane1.setViewportView(jTree1);
 
@@ -178,29 +176,19 @@ public class RaycastRendererPanel extends javax.swing.JPanel {
 
         jLabel3.setText("Base opacity:");
 
-        jLabel4.setText("Enhancement:");
-
-        IsovalueTextBox1.setText("0");
-        IsovalueTextBox1.setCursor(new java.awt.Cursor(java.awt.Cursor.TEXT_CURSOR));
-        IsovalueTextBox1.addActionListener(new java.awt.event.ActionListener() {
+        baseOpacity.setText("0");
+        baseOpacity.setCursor(new java.awt.Cursor(java.awt.Cursor.TEXT_CURSOR));
+        baseOpacity.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                IsovalueTextBox1ActionPerformed(evt);
+                baseOpacityActionPerformed(evt);
             }
         });
 
-        IsovalueTextBox2.setText("0");
-        IsovalueTextBox2.setCursor(new java.awt.Cursor(java.awt.Cursor.TEXT_CURSOR));
-        IsovalueTextBox2.addActionListener(new java.awt.event.ActionListener() {
+        sharpness.setText("0");
+        sharpness.setCursor(new java.awt.Cursor(java.awt.Cursor.TEXT_CURSOR));
+        sharpness.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                IsovalueTextBox2ActionPerformed(evt);
-            }
-        });
-
-        IsovalueTextBox3.setText("0");
-        IsovalueTextBox3.setCursor(new java.awt.Cursor(java.awt.Cursor.TEXT_CURSOR));
-        IsovalueTextBox3.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                IsovalueTextBox3ActionPerformed(evt);
+                sharpnessActionPerformed(evt);
             }
         });
 
@@ -209,112 +197,130 @@ public class RaycastRendererPanel extends javax.swing.JPanel {
         jLabel10.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
         jLabel10.setText("Y:");
 
-        lightX.setText("0");
-        lightX.setCursor(new java.awt.Cursor(java.awt.Cursor.TEXT_CURSOR));
-        lightX.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                lightXActionPerformed(evt);
-            }
-        });
-
-        lightY.setText("0");
-        lightY.setCursor(new java.awt.Cursor(java.awt.Cursor.TEXT_CURSOR));
-        lightY.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                lightYActionPerformed(evt);
-            }
-        });
-
-        lightZ.setText("0");
-        lightZ.setCursor(new java.awt.Cursor(java.awt.Cursor.TEXT_CURSOR));
-        lightZ.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                lightZActionPerformed(evt);
-            }
-        });
-
         jLabel11.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
         jLabel11.setText("Z:");
 
         jLabel12.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
         jLabel12.setText("X:");
 
-        jLabel13.setText("Light orientation:");
+        jLabel13.setText("Light vector:");
+
+        lightPosX.setMajorTickSpacing(1);
+        lightPosX.setMaximum(10);
+        lightPosX.setMinorTickSpacing(1);
+        lightPosX.setPaintLabels(true);
+        lightPosX.setPaintTicks(true);
+        lightPosX.setSnapToTicks(true);
+        lightPosX.setToolTipText("");
+        lightPosX.setValue(1);
+        lightPosX.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseReleased(java.awt.event.MouseEvent evt) {
+                lightPosXMouseReleased(evt);
+            }
+        });
+
+        lightPosZ.setMajorTickSpacing(1);
+        lightPosZ.setMaximum(10);
+        lightPosZ.setMinorTickSpacing(1);
+        lightPosZ.setPaintLabels(true);
+        lightPosZ.setPaintTicks(true);
+        lightPosZ.setSnapToTicks(true);
+        lightPosZ.setToolTipText("");
+        lightPosZ.setValue(1);
+        lightPosZ.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseReleased(java.awt.event.MouseEvent evt) {
+                lightPosZMouseReleased(evt);
+            }
+        });
+
+        lightPosY.setMajorTickSpacing(1);
+        lightPosY.setMaximum(10);
+        lightPosY.setMinorTickSpacing(1);
+        lightPosY.setPaintLabels(true);
+        lightPosY.setPaintTicks(true);
+        lightPosY.setSnapToTicks(true);
+        lightPosY.setToolTipText("");
+        lightPosY.setValue(1);
+        lightPosY.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseReleased(java.awt.event.MouseEvent evt) {
+                lightPosYMouseReleased(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addContainerGap(203, Short.MAX_VALUE)
+                .addComponent(jLabel1)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(renderingSpeedLabel)
+                .addGap(304, 304, 304))
             .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addGap(0, 0, Short.MAX_VALUE)
-                        .addComponent(jLabel1)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(renderingSpeedLabel)
-                        .addGap(304, 304, 304))
                     .addGroup(layout.createSequentialGroup()
+                        .addContainerGap()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(layout.createSequentialGroup()
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addGroup(layout.createSequentialGroup()
-                                        .addGap(62, 62, 62)
-                                        .addComponent(silhoeutteCheckBox))
+                                .addGap(62, 62, 62)
+                                .addComponent(silhoeutteCheckBox))
+                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                .addComponent(jLabel10)
+                                .addGroup(layout.createSequentialGroup()
                                     .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                                         .addComponent(shadingCheckbox)
                                         .addGroup(layout.createSequentialGroup()
-                                            .addComponent(Resolution_label)
-                                            .addGap(42, 42, 42))))
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                                .addComponent(jLabel13)
+                                                .addComponent(Resolution_label))
+                                            .addGap(30, 30, 30)))
+                                    .addGap(7, 7, 7)
+                                    .addComponent(jLabel12))
+                                .addComponent(jLabel11)))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(jLabel5)
+                                .addGap(32, 32, 32)
+                                .addComponent(sharpness, javax.swing.GroupLayout.PREFERRED_SIZE, 45, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(layout.createSequentialGroup()
+                                .addGap(100, 100, 100)
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addGroup(layout.createSequentialGroup()
-                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                            .addComponent(jLabel3)
-                                            .addComponent(jLabel2))
-                                        .addGap(63, 63, 63)
-                                        .addComponent(jLabel6)
-                                        .addGap(18, 18, 18)
-                                        .addComponent(colorButton, javax.swing.GroupLayout.PREFERRED_SIZE, 75, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                            .addGroup(layout.createSequentialGroup()
-                                                .addComponent(jLabel11)
-                                                .addGap(88, 88, 88)
-                                                .addComponent(lightZ, javax.swing.GroupLayout.PREFERRED_SIZE, 45, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                            .addGroup(layout.createSequentialGroup()
-                                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                                    .addComponent(jLabel10)
-                                                    .addComponent(jLabel12))
-                                                .addGap(88, 88, 88)
-                                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                                    .addComponent(lightX, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 45, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                                    .addComponent(lightY, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 45, javax.swing.GroupLayout.PREFERRED_SIZE))))
-                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                            .addGroup(layout.createSequentialGroup()
-                                                .addComponent(jLabel5)
-                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                                .addComponent(IsovalueTextBox3, javax.swing.GroupLayout.PREFERRED_SIZE, 45, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                            .addGroup(layout.createSequentialGroup()
-                                                .addComponent(jLabel4)
-                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                                    .addComponent(IsovalueTextBox1, javax.swing.GroupLayout.PREFERRED_SIZE, 45, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                                    .addComponent(IsovalueTextBox2, javax.swing.GroupLayout.PREFERRED_SIZE, 45, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                                    .addComponent(IsovalueTextBox, javax.swing.GroupLayout.PREFERRED_SIZE, 45, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                                .addGap(0, 0, Short.MAX_VALUE))))))
-                            .addComponent(IsoSurface)
-                            .addComponent(compositingButton)
-                            .addComponent(mipButton)
-                            .addComponent(slicerButton)
-                            .addComponent(tf2dButton)
-                            .addGroup(layout.createSequentialGroup()
-                                .addGap(193, 193, 193)
-                                .addComponent(Resolution, javax.swing.GroupLayout.PREFERRED_SIZE, 190, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addGroup(layout.createSequentialGroup()
-                                .addGap(24, 24, 24)
-                                .addComponent(jLabel13)))
-                        .addContainerGap(129, Short.MAX_VALUE))))
+                                    .addComponent(baseOpacity, javax.swing.GroupLayout.PREFERRED_SIZE, 45, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(IsovalueTextBox, javax.swing.GroupLayout.PREFERRED_SIZE, 45, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                .addComponent(lightPosY, javax.swing.GroupLayout.PREFERRED_SIZE, 190, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(lightPosX, javax.swing.GroupLayout.PREFERRED_SIZE, 190, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(lightPosZ, javax.swing.GroupLayout.PREFERRED_SIZE, 190, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(218, 218, 218)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel3)
+                            .addComponent(jLabel2))
+                        .addGap(63, 63, 63)
+                        .addComponent(jLabel6)
+                        .addGap(18, 18, 18)
+                        .addComponent(colorButton, javax.swing.GroupLayout.PREFERRED_SIZE, 75, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(199, 199, 199)
+                        .addComponent(Resolution, javax.swing.GroupLayout.PREFERRED_SIZE, 190, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(6, 6, 6)
+                        .addComponent(tf2dButton))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(6, 6, 6)
+                        .addComponent(slicerButton))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(6, 6, 6)
+                        .addComponent(mipButton))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(6, 6, 6)
+                        .addComponent(compositingButton))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(6, 6, 6)
+                        .addComponent(IsoSurface)))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -344,36 +350,31 @@ public class RaycastRendererPanel extends javax.swing.JPanel {
                     .addGroup(layout.createSequentialGroup()
                         .addGap(59, 59, 59)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(IsovalueTextBox1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(baseOpacity, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                                 .addComponent(jLabel3)
                                 .addComponent(silhoeutteCheckBox)))
-                        .addGap(12, 12, 12)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jLabel4)
-                            .addComponent(IsovalueTextBox2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(8, 8, 8)
+                        .addGap(46, 46, 46)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(jLabel5)
-                            .addComponent(IsovalueTextBox3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(sharpness, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addGap(18, 18, 18)
                         .addComponent(shadingCheckbox)))
-                .addGap(73, 73, 73)
+                .addGap(41, 41, 41)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jLabel12)
-                            .addComponent(lightX, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(11, 11, 11)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(lightY, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jLabel10)))
-                    .addComponent(jLabel13))
-                .addGap(8, 8, 8)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(lightZ, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(jLabel12)
+                        .addComponent(jLabel13))
+                    .addComponent(lightPosX, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(lightPosY, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel10))
+                .addGap(15, 15, 15)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(lightPosZ, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel11))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 12, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 136, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(Resolution, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(Resolution_label))
@@ -427,70 +428,84 @@ public class RaycastRendererPanel extends javax.swing.JPanel {
     }//GEN-LAST:event_colorButtonActionPerformed
 
     private void silhoeutteCheckBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_silhoeutteCheckBoxActionPerformed
-        renderer.setSilhouetteMode(silhoeutteCheckBox.isSelected());
+        try {
+            renderer.setSilhouetteSettings(
+                    silhoeutteCheckBox.isSelected(), 
+                    Float.parseFloat(this.baseOpacity.getText()),
+                    Float.parseFloat(sharpness.getText()));
+        } catch (NumberFormatException e) { }  
     }//GEN-LAST:event_silhoeutteCheckBoxActionPerformed
 
-    private void IsovalueTextBox1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_IsovalueTextBox1ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_IsovalueTextBox1ActionPerformed
-
-    private void IsovalueTextBox2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_IsovalueTextBox2ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_IsovalueTextBox2ActionPerformed
-
-    private void IsovalueTextBox3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_IsovalueTextBox3ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_IsovalueTextBox3ActionPerformed
-
-    private void lightXActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_lightXActionPerformed
-        double x;
+    private void baseOpacityActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_baseOpacityActionPerformed
         try {
-            x = Math.max(0, Math.min(1, Double.parseDouble(lightX.getText())));
-        } catch (NumberFormatException e) {
-            x = 0.5;
-        }  
-        
-        double y = Float.parseFloat(this.lightY.getText());
-        double z = Float.parseFloat(this.lightZ.getText());
-        renderer.setLightVector(x, y, z);
-    }//GEN-LAST:event_lightXActionPerformed
+            renderer.setSilhouetteSettings(
+                    silhoeutteCheckBox.isSelected(), 
+                    Float.parseFloat(this.baseOpacity.getText()),
+                    Float.parseFloat(this.sharpness.getText()));
+        } catch (NumberFormatException e) { }  
+    }//GEN-LAST:event_baseOpacityActionPerformed
 
-    private void lightYActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_lightYActionPerformed
-        double y;
+    private void sharpnessActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_sharpnessActionPerformed
         try {
-            y = Math.max(0, Math.min(1, Double.parseDouble(lightY.getText())));
-        } catch (NumberFormatException e) {
-            y = 0.5;
-        }  
-        double x = Float.parseFloat(this.lightX.getText());
-        double z = Float.parseFloat(this.lightZ.getText());
-        renderer.setLightVector(x, y, z);
-    }//GEN-LAST:event_lightYActionPerformed
-
-    private void lightZActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_lightZActionPerformed
-        double z;
-        try {
-            z = Math.max(0, Math.min(1, Double.parseDouble(lightZ.getText())));
-        } catch (NumberFormatException e) {
-            z = 0.5;
-        }  
-        double x = Float.parseFloat(this.lightX.getText());
-        double y = Float.parseFloat(this.lightY.getText());
-        renderer.setLightVector(x, y, z);
-    }//GEN-LAST:event_lightZActionPerformed
+            renderer.setSilhouetteSettings(
+                    silhoeutteCheckBox.isSelected(), 
+                    Float.parseFloat(this.baseOpacity.getText()), 
+                    Float.parseFloat(this.sharpness.getText()));
+        } catch (NumberFormatException e) { }  
+    }//GEN-LAST:event_sharpnessActionPerformed
 
     private void shadingCheckboxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_shadingCheckboxActionPerformed
         renderer.setShadingMode(shadingCheckbox.isSelected());
     }//GEN-LAST:event_shadingCheckboxActionPerformed
 
+    private void lightPosXMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lightPosXMouseReleased
+        if(!(lightPosX.getValue() == 0 && lightPosY.getValue() == 0 && lightPosZ.getValue() == 0)) {
+                renderer.setLightVector(
+                    (double) (lightPosX.getValue()) / 10,
+                    (double) (lightPosY.getValue()) / 10,
+                    (double) (lightPosZ.getValue()) / 10);
+        } else {
+                renderer.setLightVector(
+                    0,
+                    1,
+                    0);
+        }
+    }//GEN-LAST:event_lightPosXMouseReleased
+
+    private void lightPosZMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lightPosZMouseReleased
+        if(!(lightPosX.getValue() == 0 && lightPosY.getValue() == 0 && lightPosZ.getValue() == 0)) {
+                renderer.setLightVector(
+                    (double) (lightPosX.getValue()) / 10,
+                    (double) (lightPosY.getValue()) / 10,
+                    (double) (lightPosZ.getValue()) / 10);
+        } else {
+                renderer.setLightVector(
+                    0,
+                    1,
+                    0);
+        }
+    }//GEN-LAST:event_lightPosZMouseReleased
+
+    private void lightPosYMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lightPosYMouseReleased
+        if(!(lightPosX.getValue() == 0 && lightPosY.getValue() == 0 && lightPosZ.getValue() == 0)) {
+                renderer.setLightVector(
+                    (double) (lightPosX.getValue()) / 10,
+                    (double) (lightPosY.getValue()) / 10,
+                    (double) (lightPosZ.getValue()) / 10);
+        } else {
+                renderer.setLightVector(
+                    0,
+                    1,
+                    0);
+        }
+    }//GEN-LAST:event_lightPosYMouseReleased
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JRadioButton IsoSurface;
     private javax.swing.JTextField IsovalueTextBox;
-    private javax.swing.JTextField IsovalueTextBox1;
-    private javax.swing.JTextField IsovalueTextBox2;
-    private javax.swing.JTextField IsovalueTextBox3;
     private javax.swing.JSlider Resolution;
     private javax.swing.JLabel Resolution_label;
+    private javax.swing.JTextField baseOpacity;
     private javax.swing.ButtonGroup buttonGroup1;
     private javax.swing.JButton colorButton;
     private javax.swing.JRadioButton compositingButton;
@@ -501,17 +516,17 @@ public class RaycastRendererPanel extends javax.swing.JPanel {
     private javax.swing.JLabel jLabel13;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
-    private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTree jTree1;
-    private javax.swing.JTextField lightX;
-    private javax.swing.JTextField lightY;
-    private javax.swing.JTextField lightZ;
+    private javax.swing.JSlider lightPosX;
+    private javax.swing.JSlider lightPosY;
+    private javax.swing.JSlider lightPosZ;
     private javax.swing.JRadioButton mipButton;
     private javax.swing.JLabel renderingSpeedLabel;
     private javax.swing.JCheckBox shadingCheckbox;
+    private javax.swing.JTextField sharpness;
     private javax.swing.JCheckBox silhoeutteCheckBox;
     private javax.swing.JRadioButton slicerButton;
     private javax.swing.JRadioButton tf2dButton;

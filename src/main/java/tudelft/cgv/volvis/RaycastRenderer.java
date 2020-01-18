@@ -53,6 +53,8 @@ public class RaycastRenderer extends Renderer implements TFChangeListener {
     private boolean shadingMode = false;
     private boolean silhouetteMode = false;
     private double[] lightVector = new double[3];
+    private double baseOpacity = 0.1;
+    private double sharpness = 0.25;
     private boolean isoMode = false;
     private float iso_value=95; 
     // This is a work around
@@ -354,7 +356,7 @@ public int traceRayIso(double[] entryPoint, double[] exitPoint, double[] rayVect
             
             // Reorientate the position to the next sample step along the ray.
             for (int i = 0; i < 3; i++) {
-                currentPos[i] += lightVector[i];
+                currentPos[i] += rayVector[i];
             }
             nrSamples--;
 
@@ -378,14 +380,14 @@ public int traceRayIso(double[] entryPoint, double[] exitPoint, double[] rayVect
         }
     }
     
-    TFColor computeCompositeColor2D(double[] currentPos, double[] increments, int nrSamples, double[] rayVector) {
+    TFColor computeCompositeColor2D(double[] currentPos, int nrSamples, double[] rayVector) {
         
         // Compute the color at this position on the ray.
         int value = (int) volume.getVoxelLinearInterpolate(currentPos); // TODO: Should we use linear or tricube?
         TFColor currentColor = tFunc2D.color;
         double gradientMagnitude = this.gradients.getGradient(currentPos).mag;
         double currentOpacity = this.computeOpacity2DTF(tFunc2D.baseIntensity, tFunc2D.radius, value, gradientMagnitude) * currentColor.a;
-        currentOpacity = silhouetteOpacity(currentOpacity, this.gradients.getGradient(currentPos), rayVector);
+        currentOpacity = silhouetteOpacity(currentOpacity, this.gradients.getGradient(currentPos));
 
         // Draw a new sample if we have insufficient samples and the opacity is not densed.
         if (nrSamples >= 0 && currentColor.a < 0.999) {
@@ -395,12 +397,12 @@ public int traceRayIso(double[] entryPoint, double[] exitPoint, double[] rayVect
                         
             // Reorientate the position to the next sample step along the ray.
             for (int i = 0; i < 3; i++) {
-                currentPos[i] += increments[i];
+                currentPos[i] += rayVector[i];
             }
             nrSamples--;
             
             // Recursive call to the next color.
-            TFColor nextColor = computeCompositeColor2D(currentPos, increments, nrSamples, rayVector);   
+            TFColor nextColor = computeCompositeColor2D(currentPos, nrSamples, rayVector);   
 
             // Compute the composite color of the current and the next color along the ray.
             return new TFColor(
@@ -419,25 +421,18 @@ public int traceRayIso(double[] entryPoint, double[] exitPoint, double[] rayVect
     // @param gradient      gradient object.
     // @param rayVector     the vector of light.
     // @return              a new opacity for the voxel.
-    public double silhouetteOpacity(double currentOpacity, VoxelGradient gradient, double[] rayVector) {
+    public double silhouetteOpacity(double currentOpacity, VoxelGradient gradient) {
         if(currentOpacity > 0 && silhouetteMode) {
-            double ksc = 0.1;       // Controls the scaling of non-silhouette regions.
-            double kss = 50;        // Amount of silhouette enhancement.
-            double kse = 0.25;      // Inversly controls sharpness of the silhouette curve.
-
             // Increase the opacity of volume samples where the gradient nears perpendicular to the view direction.
-            double lightVectorDotNormGradientVector = gradient.x * rayVector[0] / gradient.mag + 
-                    gradient.y * rayVector[0] / gradient.mag + gradient.z * rayVector[0] / gradient.mag;
-            return Math.min(ksc + kss * Math.pow((int) (1 - Math.abs(lightVectorDotNormGradientVector)), kse), 1);
+            double lightVectorDotNormGradientVector = gradient.x * lightVector[0] / gradient.mag + 
+                    gradient.y * lightVector[0] / gradient.mag + gradient.z * lightVector[0] / gradient.mag;
+            return Math.min(baseOpacity + Math.pow(1 - Math.abs(lightVectorDotNormGradientVector), sharpness), 0.9);
         }
         // If there is no opacity, then we do not want to 'add' opacity.
         return currentOpacity;
     }
     
     public int traceRayComposite(double[] entryPoint, double[] exitPoint, double[] rayVector, double sampleStep) {
-        
-        // The light vector is directed toward the view point.
-        VectorMath.setVector(lightVector, lightVector[0] * sampleStep, lightVector[1] * sampleStep, lightVector[2] * sampleStep);
 
         // Compute the nr of required samples.
         int nrOfSamples = 1 + (int) Math.floor(VectorMath.distance(entryPoint, exitPoint) / sampleStep);
@@ -455,7 +450,7 @@ public int traceRayIso(double[] entryPoint, double[] exitPoint, double[] rayVect
             
         } else if (tf2dMode) {
             // 2D transfer function.
-            voxel_color = computeCompositeColor2D(currentPosition, lightVector, nrOfSamples, rayVector);
+            voxel_color = computeCompositeColor2D(currentPosition, nrOfSamples, rayVector);
         }
             
         // Computes the color
@@ -780,9 +775,11 @@ public double computeOpacity2DTF(double material_value, double material_r,
     }
     
     // Function setting silhouette mode to mode.
-    public void setSilhouetteMode(boolean mode) {
+    public void setSilhouetteSettings(boolean mode, double b, double s) {
         silhouetteMode = mode;
-        System.out.println("Set silhouette mode to" + mode);
+        baseOpacity = b;
+        sharpness = s;
+        System.out.println("Set silhouette mode to " + mode + "," + b + ", " + s);
         changed();
     }
     
@@ -791,7 +788,7 @@ public double computeOpacity2DTF(double material_value, double material_r,
         lightVector[0] = lightX * volume.getDimX();
         lightVector[1] = lightY * volume.getDimY();
         lightVector[2] = lightZ * volume.getDimZ();
-        System.out.println("Set lightvector to" + Arrays.toString(lightVector));
+        System.out.println("Set lightvector to " + Arrays.toString(lightVector));
         changed();
     }
         
