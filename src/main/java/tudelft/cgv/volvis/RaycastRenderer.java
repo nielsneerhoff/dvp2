@@ -15,7 +15,7 @@ import tudelft.cgv.util.VectorMath;
 import tudelft.cgv.volume.GradientVolume;
 import tudelft.cgv.volume.Volume;
 import tudelft.cgv.volume.VoxelGradient;
-
+ 
 import java.awt.Color;
 import java.util.Arrays;
 
@@ -230,7 +230,6 @@ public int traceRayIso(double[] entryPoint, double[] exitPoint, double[] rayVect
         VectorMath.setVector(increments, rayVector[0] * sampleStep, rayVector[1] * sampleStep, rayVector[2] * sampleStep);
         
         // Compute the number of times we need to sample.
-        double distance = VectorMath.distance(entryPoint, exitPoint);
         int nrSamples = 1 + (int) Math.floor(VectorMath.distance(entryPoint, exitPoint) / sampleStep);
 
         // The current position is initialized as the entry point.
@@ -251,7 +250,7 @@ public int traceRayIso(double[] entryPoint, double[] exitPoint, double[] rayVect
                 alpha = 1;
 
                 bisection_accuracy(currentPosition, increments, sampleStep, nextValue, currentValue, iso_value);
-//                System.out.println(nrSamples + Arrays.toString(currentPosition));
+
                 if (shadingMode) {
                     TFColor color = new TFColor(r, g, b, alpha);
                     color = computePhongShading(color, gradients.getGradient(currentPosition), rayVector);
@@ -473,13 +472,13 @@ public int traceRayIso(double[] entryPoint, double[] exitPoint, double[] rayVect
         double lightLength = VectorMath.length(lightVector);
         double rayLength = VectorMath.length(rayVector);
         
-        // No shading needed if mode is not on, if the color is black or white, or if the vectors have length 0
+        // No shading needed if mode is not on, if the color is black or white, or if the vectors have length 0.
         if(!shadingMode || (voxel_color.r == 0 && voxel_color.g == 0 && voxel_color.b == 0) 
                 || lightLength == 0 || rayLength == 0 || gradient.mag == 0) {
             return voxel_color;
         }
         
-        // Light properties(usually all 1.0,1.0,1.0, from slides)
+        // Light color RGB (usually all 1.0,1.0,1.0, from slides).
         double[] La = {1, 1, 1};
         double[] Ld = {1, 1, 1};
         double[] Ls = {1, 1, 1};
