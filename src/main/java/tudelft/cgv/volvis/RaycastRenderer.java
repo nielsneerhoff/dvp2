@@ -517,7 +517,6 @@ public int traceRayIso(double[] entryPoint, double[] exitPoint, double[] rayVect
     // Implements the basic tracing of rays trough the image and given the
     // camera transformation
     // It calls the functions depending on the raycasting mode
-  
     public void raycast(double[] viewMatrix) {
 
     	//data allocation
@@ -530,6 +529,9 @@ public int traceRayIso(double[] entryPoint, double[] exitPoint, double[] rayVect
         
         // increment in the pixel domain in pixel units
         int increment = 1;
+        if(interactiveMode) {
+            increment = 5;
+        }
         // sample step in voxel units
         int sampleStep = 1;
         // reset the image to black
@@ -539,21 +541,24 @@ public int traceRayIso(double[] entryPoint, double[] exitPoint, double[] rayVect
         // perpendicular to the view vector viewVec which is going from the view point towards the object
         // uVec contains the up vector of the camera in world coordinates (image vertical)
         // vVec contains the horizontal vector in world coordinates (image horizontal)
-        getViewPlaneVectors(viewMatrix,viewVec,uVec,vVec);
-        
+        getViewPlaneVectors(viewMatrix, viewVec, uVec, vVec);
         
         // The result of the visualization is saved in an image(texture)
-        // we update the vector according to the resolution factor
-        // If the resolution is 0.25 we will sample 4 times more points. 
-        for(int k=0;k<3;k++) {
-            uVec[k]=res_factor*uVec[k];
-            vVec[k]=res_factor*vVec[k];
+        // We update the vector according to the resolution factor.
+        // If the resolution is 0.25 we will sample 4 times more points.
+        
+        for(int k = 0; k < 3;k++) {
+            uVec[k] = res_factor * uVec[k];
+            vVec[k] = res_factor * vVec[k];
         }
+        
+        System.out.println(Arrays.toString(uVec) + " " + Arrays.toString(vVec));
+        
         
        // We get the size of the image/texture we will be puting the result of the 
         // volume rendering operation.
-        int imageW=image.getWidth();
-        int imageH=image.getHeight();
+        int imageW= image.getWidth();
+        int imageH= image.getHeight();
 
         int[] imageCenter = new int[2];
         // Center of the image/texture 
@@ -561,9 +566,12 @@ public int traceRayIso(double[] entryPoint, double[] exitPoint, double[] rayVect
         imageCenter[1]= imageH/2;
         
         // imageW/ image H contains the real width of the image we will use given the resolution. 
-        //The resolution is generated once based on the maximum resolution.
+        // The resolution is generated once based on the maximum resolution.
+        
         imageW = (int) (imageW*((max_res_factor/res_factor)));
         imageH = (int) (imageH*((max_res_factor/res_factor)));
+        
+        System.out.println(res_factor + " " + imageW + "x" + imageH);
         
         //The rayVector is pointing towards the scene
         double[] rayVector = new double[3];
@@ -609,8 +617,7 @@ public int traceRayIso(double[] entryPoint, double[] exitPoint, double[] rayVect
 // triangle widget tFunc2D contains the values of the baseintensity and radius
 // tFunc2D.baseIntensity, tFunc2D.radius they are in image intensity units
 // TODO: Elaborate, comment.
-public double computeOpacity2DTF(double material_value, double material_r,
-        double voxelValue, double gradMagnitude) {
+public double computeOpacity2DTF(double material_value, double material_r,double voxelValue, double gradMagnitude) {
     
     // Compute the angle of the voxel, determined by its gradient.
     double angleOfVoxel = Math.atan(Math.abs(voxelValue - material_value) / gradMagnitude);
@@ -783,10 +790,6 @@ public double computeOpacity2DTF(double material_value, double material_r,
     
     // Function setting the normalized light vector.
     public void setNormalLightVector(double[] lightVector) {
-        // If all values are zero, set default light vector.
-        if(lightVector[0] == 0 && lightVector[1] == 0 && lightVector[2] == 0) {
-            lightVector[1] = 1;
-        }
         double norm = VectorMath.length(lightVector);
         VectorMath.setVector(normalLightVector, 
                 lightVector[0] / norm, 
