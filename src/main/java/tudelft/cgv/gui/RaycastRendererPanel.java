@@ -11,6 +11,7 @@ import java.awt.BorderLayout;
 import tudelft.cgv.volvis.RaycastRenderer;
 import javax.swing.JColorChooser;
 import java.awt.Color;
+import tudelft.cgv.util.VectorMath;
 import tudelft.cgv.volvis.TFColor;
 
 /**
@@ -190,20 +191,20 @@ public class RaycastRendererPanel extends javax.swing.JPanel {
 
         jLabel5.setText("Sharpness:");
 
-        jLabel13.setText("Light vector:");
+        jLabel13.setText("Light vector (normalized):");
 
-        XScrollbar.setMaximum(1);
-        XScrollbar.setMinimum(-1);
+        XScrollbar.setMinimum(-100);
         XScrollbar.setOrientation(javax.swing.JScrollBar.HORIZONTAL);
+        XScrollbar.setToolTipText("");
         XScrollbar.setVisibleAmount(0);
+        XScrollbar.setPreferredSize(new java.awt.Dimension(30, 15));
         XScrollbar.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseReleased(java.awt.event.MouseEvent evt) {
                 XScrollbarMouseReleased(evt);
             }
         });
 
-        YScrollbar.setMaximum(1);
-        YScrollbar.setMinimum(-1);
+        YScrollbar.setMinimum(-100);
         YScrollbar.setOrientation(javax.swing.JScrollBar.HORIZONTAL);
         YScrollbar.setVisibleAmount(0);
         YScrollbar.addMouseListener(new java.awt.event.MouseAdapter() {
@@ -212,8 +213,7 @@ public class RaycastRendererPanel extends javax.swing.JPanel {
             }
         });
 
-        ZScrollbar.setMaximum(1);
-        ZScrollbar.setMinimum(-1);
+        ZScrollbar.setMinimum(-100);
         ZScrollbar.setOrientation(javax.swing.JScrollBar.HORIZONTAL);
         ZScrollbar.setVisibleAmount(0);
         ZScrollbar.addMouseListener(new java.awt.event.MouseAdapter() {
@@ -226,78 +226,73 @@ public class RaycastRendererPanel extends javax.swing.JPanel {
         this.setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(jLabel1)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(renderingSpeedLabel)
-                .addGap(304, 304, 304))
             .addGroup(layout.createSequentialGroup()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(layout.createSequentialGroup()
-                                .addGap(218, 218, 218)
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(jLabel3)
-                                    .addComponent(jLabel2))
-                                .addGap(63, 63, 63)
-                                .addComponent(jLabel6)
-                                .addGap(18, 18, 18)
-                                .addComponent(colorButton, javax.swing.GroupLayout.PREFERRED_SIZE, 75, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addGroup(layout.createSequentialGroup()
-                                .addGap(199, 199, 199)
-                                .addComponent(Resolution, javax.swing.GroupLayout.PREFERRED_SIZE, 190, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addGroup(layout.createSequentialGroup()
-                                .addGap(6, 6, 6)
-                                .addComponent(tf2dButton))
-                            .addGroup(layout.createSequentialGroup()
-                                .addGap(6, 6, 6)
-                                .addComponent(slicerButton))
-                            .addGroup(layout.createSequentialGroup()
-                                .addGap(6, 6, 6)
-                                .addComponent(mipButton))
-                            .addGroup(layout.createSequentialGroup()
-                                .addGap(6, 6, 6)
-                                .addComponent(compositingButton))
-                            .addGroup(layout.createSequentialGroup()
-                                .addGap(6, 6, 6)
-                                .addComponent(IsoSurface)))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addGroup(layout.createSequentialGroup()
                         .addContainerGap()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(layout.createSequentialGroup()
-                                .addGap(62, 62, 62)
-                                .addComponent(silhoeutteCheckBox))
-                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                                .addComponent(shadingCheckbox)
-                                .addGroup(layout.createSequentialGroup()
-                                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                        .addComponent(jLabel13)
-                                        .addComponent(Resolution_label))
-                                    .addGap(30, 30, 30))))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                                .addGap(0, 0, Short.MAX_VALUE)
+                                .addComponent(jLabel1)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(renderingSpeedLabel)
+                                .addGap(304, 304, 304))
                             .addGroup(layout.createSequentialGroup()
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addGroup(layout.createSequentialGroup()
-                                        .addComponent(jLabel5)
-                                        .addGap(32, 32, 32)
-                                        .addComponent(sharpness, javax.swing.GroupLayout.PREFERRED_SIZE, 45, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                    .addGroup(layout.createSequentialGroup()
-                                        .addGap(100, 100, 100)
-                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                            .addComponent(baseOpacity, javax.swing.GroupLayout.PREFERRED_SIZE, 45, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                            .addComponent(IsovalueTextBox, javax.swing.GroupLayout.PREFERRED_SIZE, 45, javax.swing.GroupLayout.PREFERRED_SIZE))))
-                                .addGap(233, 233, 233))
-                            .addGroup(layout.createSequentialGroup()
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
-                                    .addComponent(YScrollbar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(XScrollbar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(ZScrollbar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                .addGap(238, 238, 238)))))
-                .addGap(0, 102, Short.MAX_VALUE))
+                                        .addGap(62, 62, 62)
+                                        .addComponent(silhoeutteCheckBox))
+                                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                        .addComponent(shadingCheckbox)
+                                        .addGroup(layout.createSequentialGroup()
+                                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                                .addComponent(jLabel13)
+                                                .addComponent(Resolution_label))
+                                            .addGap(30, 30, 30))))
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                    .addComponent(ZScrollbar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                        .addComponent(YScrollbar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                        .addGroup(layout.createSequentialGroup()
+                                            .addComponent(jLabel5)
+                                            .addGap(32, 32, 32)
+                                            .addComponent(sharpness, javax.swing.GroupLayout.PREFERRED_SIZE, 45, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                        .addGroup(layout.createSequentialGroup()
+                                            .addGap(100, 100, 100)
+                                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                                .addComponent(baseOpacity, javax.swing.GroupLayout.PREFERRED_SIZE, 45, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                                .addComponent(IsovalueTextBox, javax.swing.GroupLayout.PREFERRED_SIZE, 45, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                                        .addComponent(XScrollbar, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                                .addGap(311, 350, Short.MAX_VALUE))))
+                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGroup(layout.createSequentialGroup()
+                            .addGap(218, 218, 218)
+                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                .addComponent(jLabel3)
+                                .addComponent(jLabel2))
+                            .addGap(63, 63, 63)
+                            .addComponent(jLabel6)
+                            .addGap(18, 18, 18)
+                            .addComponent(colorButton, javax.swing.GroupLayout.PREFERRED_SIZE, 75, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGroup(layout.createSequentialGroup()
+                            .addGap(199, 199, 199)
+                            .addComponent(Resolution, javax.swing.GroupLayout.PREFERRED_SIZE, 190, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGroup(layout.createSequentialGroup()
+                            .addGap(6, 6, 6)
+                            .addComponent(tf2dButton))
+                        .addGroup(layout.createSequentialGroup()
+                            .addGap(6, 6, 6)
+                            .addComponent(slicerButton))
+                        .addGroup(layout.createSequentialGroup()
+                            .addGap(6, 6, 6)
+                            .addComponent(mipButton))
+                        .addGroup(layout.createSequentialGroup()
+                            .addGap(6, 6, 6)
+                            .addComponent(compositingButton))
+                        .addGroup(layout.createSequentialGroup()
+                            .addGap(6, 6, 6)
+                            .addComponent(IsoSurface))))
+                .addGap(0, 0, 0))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -344,9 +339,9 @@ public class RaycastRendererPanel extends javax.swing.JPanel {
                     .addComponent(XScrollbar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(33, 33, 33)
                 .addComponent(YScrollbar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(35, 35, 35)
+                .addGap(31, 31, 31)
                 .addComponent(ZScrollbar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 199, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 203, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(Resolution, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(Resolution_label))
@@ -428,30 +423,62 @@ public class RaycastRendererPanel extends javax.swing.JPanel {
 
     private void shadingCheckboxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_shadingCheckboxActionPerformed
         renderer.setShadingMode(shadingCheckbox.isSelected());
+        
+        // Setting light vector (if shading box is (re)selected).
+        double xValue = XScrollbar.getValue();
+        double yValue = YScrollbar.getValue();
+        double zValue = ZScrollbar.getValue();
+        // Value of scrollbars is between -100 and 100. We do not allow zero values.
+        xValue = xValue < 0 ? -1 : 1;
+        yValue = yValue < 0 ? -1 : 1;
+        zValue = zValue < 0 ? -1 : 1;
+        double[] lightVector = {
+            xValue,
+            yValue,
+            zValue};
+        renderer.setNormalLightVector(lightVector);
     }//GEN-LAST:event_shadingCheckboxActionPerformed
 
     // Sets the light vector to the current values specified by x, y and z scrollbar.
     private void XScrollbarMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_XScrollbarMouseReleased
-        renderer.setLightVector(
-            (double) (XScrollbar.getValue()),
-            (double) (YScrollbar.getValue()),
-            (double) (ZScrollbar.getValue()));
+            // Value of scrollbar is between -100 and 100. We do not allow zero values.
+            double xValue = XScrollbar.getValue();
+            if(xValue == 0) {
+                xValue = xValue < 0 ? -1 : 1;
+            }
+            double[] lightVector = {
+                xValue,
+                YScrollbar.getValue(),
+                ZScrollbar.getValue()};
+        renderer.setNormalLightVector(lightVector);
     }//GEN-LAST:event_XScrollbarMouseReleased
 
     // Sets the light vector to the current values specified by x, y and z scrollbar.
     private void YScrollbarMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_YScrollbarMouseReleased
-        renderer.setLightVector(
-            (double) (XScrollbar.getValue()),
-            (double) (YScrollbar.getValue()),
-            (double) (ZScrollbar.getValue()));
+            // Value of scrollbar is between -100 and 100. We do not allow zero values.
+            double yValue = YScrollbar.getValue();
+            if(yValue == 0) {
+                yValue = yValue < 0 ? -1 : 1;
+            }
+            double[] lightVector = {
+                XScrollbar.getValue(),
+                yValue,
+                ZScrollbar.getValue()};
+        renderer.setNormalLightVector(lightVector);
     }//GEN-LAST:event_YScrollbarMouseReleased
 
     // Sets the light vector to the current values specified by x, y and z scrollbar.
     private void ZScrollbarMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_ZScrollbarMouseReleased
-        renderer.setLightVector(
-            (double) (XScrollbar.getValue()),
-            (double) (YScrollbar.getValue()),
-            (double) (ZScrollbar.getValue()));
+            // Value of scrollbar is between -100 and 100. We do not allow zero values.
+            double zValue = ZScrollbar.getValue();
+            if(zValue == 0) {
+                zValue = zValue < 0 ? -1 : 1;
+            }
+            double[] lightVector = {
+                XScrollbar.getValue(),
+                YScrollbar.getValue(),
+                zValue};
+        renderer.setNormalLightVector(lightVector);
     }//GEN-LAST:event_ZScrollbarMouseReleased
 
         

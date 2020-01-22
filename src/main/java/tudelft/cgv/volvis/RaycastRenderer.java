@@ -52,7 +52,7 @@ public class RaycastRenderer extends Renderer implements TFChangeListener {
     private boolean tf2dMode = false;
     private boolean shadingMode = false;
     private boolean silhouetteMode = false;
-    private double[] lightVector = new double[3];
+    private double[] normalLightVector = new double[3];
     private double baseOpacity = 0.1;
     private double sharpness = 0.25;
     private boolean isoMode = false;
@@ -423,8 +423,8 @@ public int traceRayIso(double[] entryPoint, double[] exitPoint, double[] rayVect
     public double silhouetteOpacity(double currentOpacity, VoxelGradient gradient) {
         if(currentOpacity > 0 && silhouetteMode) {
             // Increase the opacity of volume samples where the gradient nears perpendicular to the view direction.
-            double lightVectorDotNormGradientVector = gradient.x * lightVector[0] / gradient.mag + 
-                    gradient.y * lightVector[0] / gradient.mag + gradient.z * lightVector[0] / gradient.mag;
+            double lightVectorDotNormGradientVector = gradient.x * normalLightVector[0] / gradient.mag + 
+                    gradient.y * normalLightVector[0] / gradient.mag + gradient.z * normalLightVector[0] / gradient.mag;
             return Math.min(baseOpacity + Math.pow(1 - Math.abs(lightVectorDotNormGradientVector), sharpness), 0.9);
         }
         // If there is no opacity, then we do not want to 'add' opacity.
@@ -469,7 +469,7 @@ public int traceRayIso(double[] entryPoint, double[] exitPoint, double[] rayVect
         double ks = 0.2; // Specular.
         int alpha = 100; // Alpha.
         
-        double lightLength = VectorMath.length(lightVector);
+        double lightLength = VectorMath.length(normalLightVector);
         double rayLength = VectorMath.length(rayVector);
         
         // No shading needed if mode is not on, if the color is black or white, or if the vectors have length 0.
@@ -484,17 +484,16 @@ public int traceRayIso(double[] entryPoint, double[] exitPoint, double[] rayVect
         double[] Ls = {1, 1, 1};
 
         // Normalized vectors.
-        double[] normLightVector = {lightVector[0] / lightLength, lightVector[1] / lightLength, lightVector[2] / lightLength};
         double[] normGradientVector = {gradient.x / gradient.mag, gradient.y / gradient.mag, gradient.z / gradient.mag};
         double[] normRayVector = {rayVector[0] / rayLength, rayVector[1] / rayLength, rayVector[2] / rayLength};
         
         // cosTheta (gradient vector is our normal vector) 
-        double cosTheta = VectorMath.dotproduct(normLightVector, normGradientVector);
+        double cosTheta = VectorMath.dotproduct(normalLightVector, normGradientVector);
 
         // R
-        double temp = VectorMath.dotproduct(normGradientVector, normLightVector) * 2;
+        double temp = VectorMath.dotproduct(normGradientVector, normalLightVector) * 2;
         double[] temptimesGradientVector = {normGradientVector[0] * temp, normGradientVector[1] * temp, normGradientVector[2] * temp};
-        double[] R = {temptimesGradientVector[0] - normLightVector[0], temptimesGradientVector[1] - normLightVector[1], temptimesGradientVector[2] - normLightVector[2]};
+        double[] R = {temptimesGradientVector[0] - normalLightVector[0], temptimesGradientVector[1] - normalLightVector[1], temptimesGradientVector[2] - normalLightVector[2]};
         double cosPhi = VectorMath.dotproduct(normRayVector, R);
         
         double r = La[0] * ka * voxel_color.r + Ld[0] * kd * voxel_color.r * cosTheta + Ls[0] * ks * voxel_color.r * Math.pow(cosPhi, alpha);
@@ -782,12 +781,18 @@ public double computeOpacity2DTF(double material_value, double material_r,
         changed();
     }
     
-    // Function setting the light vector proportional to arguments.
-    public void setLightVector(double lightX, double lightY, double lightZ) {
-        lightVector[0] = lightX * volume.getDimX();
-        lightVector[1] = lightY * volume.getDimY();
-        lightVector[2] = lightZ * volume.getDimZ();
-        System.out.println("Set lightvector to " + Arrays.toString(lightVector));
+    // Function setting the normalized light vector.
+    public void setNormalLightVector(double[] lightVector) {
+        // If all values are zero, set default light vector.
+        if(lightVector[0] == 0 && lightVector[1] == 0 && lightVector[2] == 0) {
+            lightVector[1] = 1;
+        }
+        double norm = VectorMath.length(lightVector);
+        VectorMath.setVector(normalLightVector, 
+                lightVector[0] / norm, 
+                lightVector[1] / norm, 
+                lightVector[2] / norm);
+        System.out.println(Arrays.toString(lightVector) + Arrays.toString(normalLightVector));
         changed();
     }
         
