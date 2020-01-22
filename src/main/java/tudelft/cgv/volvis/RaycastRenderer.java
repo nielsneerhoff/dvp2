@@ -386,7 +386,7 @@ public int traceRayIso(double[] entryPoint, double[] exitPoint, double[] rayVect
         TFColor currentColor = tFunc2D.color;
         double gradientMagnitude = this.gradients.getGradient(currentPos).mag;
         double currentOpacity = this.computeOpacity2DTF(tFunc2D.baseIntensity, tFunc2D.radius, value, gradientMagnitude) * currentColor.a;
-        currentOpacity = silhouetteOpacity(currentOpacity, this.gradients.getGradient(currentPos));
+        currentOpacity = silhouetteOpacity(currentOpacity, this.gradients.getGradient(currentPos), rayVector);
 
         // Draw a new sample if we have insufficient samples and the opacity is not densed.
         if (nrSamples >= 0 && currentColor.a < 0.999) {
@@ -420,12 +420,13 @@ public int traceRayIso(double[] entryPoint, double[] exitPoint, double[] rayVect
     // @param gradient      gradient object.
     // @param rayVector     the vector of light.
     // @return              a new opacity for the voxel.
-    public double silhouetteOpacity(double currentOpacity, VoxelGradient gradient) {
+    public double silhouetteOpacity(double currentOpacity, VoxelGradient gradient, double[] rayVector) {
         if(currentOpacity > 0 && silhouetteMode) {
             // Increase the opacity of volume samples where the gradient nears perpendicular to the view direction.
-            double lightVectorDotNormGradientVector = gradient.x * normalLightVector[0] / gradient.mag + 
-                    gradient.y * normalLightVector[0] / gradient.mag + gradient.z * normalLightVector[0] / gradient.mag;
-            return Math.min(baseOpacity + Math.pow(1 - Math.abs(lightVectorDotNormGradientVector), sharpness), 0.9);
+            double dotProduct = 
+                    (gradient.x *  rayVector[0] + gradient.y * rayVector[1] + gradient.z * rayVector[2]) / gradient.mag;
+            System.out.println(dotProduct);
+            return Math.min(baseOpacity + Math.pow(1 - Math.abs(dotProduct), sharpness), 0.998);
         }
         // If there is no opacity, then we do not want to 'add' opacity.
         return currentOpacity;
@@ -552,9 +553,6 @@ public int traceRayIso(double[] entryPoint, double[] exitPoint, double[] rayVect
             vVec[k] = res_factor * vVec[k];
         }
         
-        System.out.println(Arrays.toString(uVec) + " " + Arrays.toString(vVec));
-        
-        
        // We get the size of the image/texture we will be puting the result of the 
         // volume rendering operation.
         int imageW= image.getWidth();
@@ -569,9 +567,7 @@ public int traceRayIso(double[] entryPoint, double[] exitPoint, double[] rayVect
         // The resolution is generated once based on the maximum resolution.
         
         imageW = (int) (imageW*((max_res_factor/res_factor)));
-        imageH = (int) (imageH*((max_res_factor/res_factor)));
-        
-        System.out.println(res_factor + " " + imageW + "x" + imageH);
+        imageH = (int) (imageH*((max_res_factor/res_factor)));       
         
         //The rayVector is pointing towards the scene
         double[] rayVector = new double[3];
@@ -784,7 +780,6 @@ public double computeOpacity2DTF(double material_value, double material_r,double
         silhouetteMode = mode;
         baseOpacity = b;
         sharpness = s;
-        System.out.println("Set silhouette mode to " + mode + "," + b + ", " + s);
         changed();
     }
     
