@@ -215,9 +215,6 @@
     </Component>
     <Component class="javax.swing.JCheckBox" name="shadingCheckbox">
       <Properties>
-        <Property name="buttonGroup" type="javax.swing.ButtonGroup" editor="org.netbeans.modules.form.RADComponent$ButtonGroupPropertyEditor">
-          <ComponentRef name="buttonGroup1"/>
-        </Property>
         <Property name="text" type="java.lang.String" value="Volume shading"/>
       </Properties>
       <Events>

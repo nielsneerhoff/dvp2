@@ -113,7 +113,6 @@ public class RaycastRendererPanel extends javax.swing.JPanel {
             }
         });
 
-        buttonGroup1.add(shadingCheckbox);
         shadingCheckbox.setText("Volume shading");
         shadingCheckbox.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -417,9 +416,9 @@ public class RaycastRendererPanel extends javax.swing.JPanel {
         double yValue = YScrollbar.getValue();
         double zValue = ZScrollbar.getValue();
         // Value of scrollbars is between -100 and 100. We do not allow zero values.
-        xValue = xValue < 0 ? -1 : 1;
-        yValue = yValue < 0 ? -1 : 1;
-        zValue = zValue < 0 ? -1 : 1;
+        if(xValue == 0 && yValue == 0 && zValue == 0) {
+            yValue = 1;
+        }
         double[] lightVector = {
             xValue,
             yValue,
