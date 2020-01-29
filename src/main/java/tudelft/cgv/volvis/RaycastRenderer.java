@@ -621,9 +621,12 @@ public double computeOpacity2DTF(double material_value, double material_r,double
     double angleInWidget = Math.atan(material_r / gradients.getMaxGradientMagnitude());
     
     // If the angle set in the widget contains the angle of the current voxel, return full opacity.
-    return angleOfVoxel < angleInWidget ? 1 : 0;
-}  
-
+    //return angleOfVoxel < angleInWidget ? 1 : 0;
+    if(angleOfVoxel < angleInWidget){
+        return(1 - (angleOfVoxel/angleInWidget)); 
+    } 
+    else return 0;
+}
   //////////////////////////////////////////////////////////////////////
   //////////////////////////////////////////////////////////////////////
   //////////////////////////////////////////////////////////////////////
